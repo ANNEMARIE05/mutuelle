@@ -1,0 +1,176 @@
+import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import apiAdapter from '../services/apiAdapter';
+
+const Profile = () => {
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ type: '', text: '' });
+    const [passwords, setPasswords] = useState({
+        current_password: '',
+        password: '',
+        password_confirmation: ''
+    });
+
+    const handlePasswordChange = (e) => {
+        setPasswords({
+            ...passwords,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage({ type: '', text: '' });
+
+        // Validation
+        if (passwords.password !== passwords.password_confirmation) {
+            setMessage({ type: 'error', text: 'Les mots de passe ne correspondent pas' });
+            setLoading(false);
+            return;
+        }
+
+        if (passwords.password.length < 8) {
+            setMessage({ type: 'error', text: 'Le mot de passe doit contenir au moins 8 caractères' });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            await apiAdapter.updatePassword(passwords);
+            setMessage({ type: 'success', text: 'Mot de passe modifié avec succès!' });
+            setPasswords({
+                current_password: '',
+                password: '',
+                password_confirmation: ''
+            });
+        } catch (error) {
+            setMessage({ type: 'error', text: 'Une erreur est survenue lors de la modification du mot de passe' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold text-noir-fonce mb-2">Mon Profil</h1>
+                <p className="text-noir-leger">Gérez vos informations personnelles et votre mot de passe</p>
+            </div>
+
+            {/* Informations du profil */}
+            <div className="bg-white rounded shadow p-6">
+                <h2 className="text-xl font-bold text-noir-fonce mb-4 pb-2 border-b-2 border-jaune">
+                    <i className="fas fa-user mr-2"></i>Informations Personnelles
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium text-noir-leger mb-1">Nom</label>
+                        <div className="px-4 py-2 bg-gris-clair rounded-md text-noir-fonce">{user?.name}</div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-noir-leger mb-1">Email</label>
+                        <div className="px-4 py-2 bg-gris-clair rounded-md text-noir-fonce">{user?.email}</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Modifier le mot de passe */}
+            <div className="bg-white rounded shadow p-6">
+                <h2 className="text-xl font-bold text-noir-fonce mb-4 pb-2 border-b-2 border-jaune">
+                    <i className="fas fa-lock mr-2"></i>Modifier le Mot de Passe
+                </h2>
+
+                {message.text && (
+                    <div
+                        className={`mb-6 px-4 py-3 rounded-md flex items-center ${
+                            message.type === 'success'
+                                ? 'bg-green-50 border border-green-200 text-green-800'
+                                : 'bg-red-50 border border-red-200 text-red-800'
+                        }`}
+                    >
+                        <i
+                            className={`fas ${
+                                message.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'
+                            } mr-2`}
+                        ></i>
+                        {message.text}
+                    </div>
+                )}
+
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                    <div>
+                        <label htmlFor="current_password" className="block text-sm font-medium text-noir mb-2">
+                            Mot de passe actuel <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            name="current_password"
+                            id="current_password"
+                            value={passwords.current_password}
+                            onChange={handlePasswordChange}
+                            required
+                            className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-noir mb-2">
+                            Nouveau mot de passe <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            value={passwords.password}
+                            onChange={handlePasswordChange}
+                            required
+                            minLength="8"
+                            className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                        />
+                        <p className="text-xs text-noir-leger mt-1">Minimum 8 caractères</p>
+                    </div>
+
+                    <div>
+                        <label htmlFor="password_confirmation" className="block text-sm font-medium text-noir mb-2">
+                            Confirmer le nouveau mot de passe <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            id="password_confirmation"
+                            value={passwords.password_confirmation}
+                            onChange={handlePasswordChange}
+                            required
+                            minLength="8"
+                            className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                        />
+                    </div>
+
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>Modification...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-save mr-2"></i>Modifier le mot de passe
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default Profile;
