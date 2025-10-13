@@ -104,14 +104,14 @@ const ActionsCreate = () => {
     });
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto px-2 sm:px-4">
             {/* Bouton retour et breadcrumb */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-3 md:mb-6">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center px-4 py-2 text-noir-leger hover:text-jaune hover:bg-jaune-clair rounded transition-colors"
+                    className="flex items-center px-2 py-1.5 md:px-4 md:py-2 text-noir-leger hover:text-jaune hover:bg-jaune-clair rounded transition-colors text-sm"
                 >
-                    <i className="fas fa-arrow-left mr-2"></i>Retour
+                    <i className="fas fa-arrow-left mr-1 md:mr-2"></i>Retour
                 </button>
                 <div className="hidden md:block">
                     <div className="flex items-center text-sm text-noir-leger">
@@ -125,31 +125,31 @@ const ActionsCreate = () => {
             </div>
 
             {/* En-tête */}
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-noir-fonce">
-                    <i className="fas fa-plus-circle text-jaune mr-2"></i>Créer une Action
+            <div className="mb-3 md:mb-6">
+                <h1 className="text-xl md:text-3xl font-bold text-noir-fonce">
+                    <i className="fas fa-plus-circle text-jaune mr-1 md:mr-2"></i>Créer une Action
                 </h1>
-                <p className="text-noir-leger mt-2">Appliquer une action sur un ou plusieurs adhérents</p>
+                <p className="text-noir-leger mt-1 md:mt-2 text-sm md:text-base">Appliquer une action sur un ou plusieurs adhérents</p>
             </div>
 
             {/* Formulaire */}
-            <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4 md:p-5">
+            <form onSubmit={handleSubmit} className="bg-white rounded shadow p-3 md:p-5">
                 {Object.keys(errors).length > 0 && (
-                    <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
+                    <div className="mb-3 md:mb-6 bg-red-50 border border-red-200 text-red-800 px-3 md:px-4 py-2 md:py-3 rounded-md text-sm">
                         <i className="fas fa-exclamation-circle mr-2"></i>
                         Veuillez corriger les erreurs dans le formulaire.
                     </div>
                 )}
 
                 {/* Informations de l'action */}
-                <div className="mb-8">
-                    <h2 className="text-xl font-bold text-noir-fonce mb-4 pb-2 border-b-2 border-jaune">
-                        <i className="fas fa-info-circle mr-2"></i>Informations de l'Action
+                <div className="mb-4 md:mb-8">
+                    <h2 className="text-lg md:text-xl font-bold text-noir-fonce mb-3 md:mb-4 pb-2 border-b-2 border-jaune">
+                        <i className="fas fa-info-circle mr-1 md:mr-2"></i>Informations de l'Action
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
                         <div className="md:col-span-2">
-                            <label htmlFor="type_action" className="block text-sm font-medium text-noir mb-2">
+                            <label htmlFor="type_action" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
                                 Type d'Action <span className="text-red-500">*</span>
                             </label>
                             <select
@@ -158,7 +158,7 @@ const ActionsCreate = () => {
                                 value={formData.type_action}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 md:px-4 py-1.5 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm md:text-base"
                             >
                                 <option value="">Sélectionner un type d'action...</option>
                                 <option value="Bonus">Bonus</option>
@@ -174,7 +174,7 @@ const ActionsCreate = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="montant" className="block text-sm font-medium text-noir mb-2">
+                            <label htmlFor="montant" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
                                 Montant (FCFA) <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -186,13 +186,13 @@ const ActionsCreate = () => {
                                 required
                                 step="0.01"
                                 min="0"
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 md:px-4 py-1.5 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm md:text-base"
                             />
                             {errors.montant && <p className="text-red-500 text-xs mt-1">{errors.montant[0]}</p>}
                         </div>
 
                         <div>
-                            <label htmlFor="date_application" className="block text-sm font-medium text-noir mb-2">
+                            <label htmlFor="date_application" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
                                 Date d'Application <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -202,7 +202,7 @@ const ActionsCreate = () => {
                                 value={formData.date_application}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 md:px-4 py-1.5 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm md:text-base"
                             />
                             {errors.date_application && (
                                 <p className="text-red-500 text-xs mt-1">{errors.date_application[0]}</p>
@@ -213,38 +213,38 @@ const ActionsCreate = () => {
                 </div>
 
                 {/* Sélection des adhérents */}
-                <div className="mb-8">
-                    <h2 className="text-xl font-bold text-noir-fonce mb-4 pb-2 border-b-2 border-jaune">
-                        <i className="fas fa-users mr-2"></i>Adhérents Concernés{' '}
+                <div className="mb-4 md:mb-8">
+                    <h2 className="text-lg md:text-xl font-bold text-noir-fonce mb-3 md:mb-4 pb-2 border-b-2 border-jaune">
+                        <i className="fas fa-users mr-1 md:mr-2"></i>Adhérents Concernés{' '}
                         <span className="text-red-500">*</span>
                     </h2>
 
                     {/* Barre de recherche */}
-                    <div className="mb-4">
+                    <div className="mb-3 md:mb-4">
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Rechercher un adhérent..."
-                            className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                            className="w-full px-3 md:px-4 py-1.5 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm md:text-base"
                         />
                     </div>
 
                     {/* Options de sélection */}
-                    <div className="mb-4 flex gap-3">
+                    <div className="mb-3 md:mb-4 flex gap-2 md:gap-3">
                         <button
                             type="button"
                             onClick={selectAll}
                             disabled={selectingAll}
-                            className="px-4 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 md:px-4 py-1.5 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce rounded-md text-xs md:text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {selectingAll ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i>Sélection...
+                                    <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i>Sélection...
                                 </>
                             ) : (
                                 <>
-                                    <i className="fas fa-check-double mr-2"></i>Tout sélectionner
+                                    <i className="fas fa-check-double mr-1 md:mr-2"></i>Tout sélectionner
                                 </>
                             )}
                         </button>
@@ -252,57 +252,57 @@ const ActionsCreate = () => {
                             type="button"
                             onClick={deselectAll}
                             disabled={deselectingAll}
-                            className="px-4 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 md:px-4 py-1.5 md:py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md text-xs md:text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {deselectingAll ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i>Désélection...
+                                    <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i>Désélection...
                                 </>
                             ) : (
                                 <>
-                                    <i className="fas fa-times mr-2"></i>Tout désélectionner
+                                    <i className="fas fa-times mr-1 md:mr-2"></i>Tout désélectionner
                                 </>
                             )}
                         </button>
                     </div>
 
-                    {errors.adherents && <p className="text-red-500 text-sm mb-4">{errors.adherents[0]}</p>}
+                    {errors.adherents && <p className="text-red-500 text-xs md:text-sm mb-3 md:mb-4">{errors.adherents[0]}</p>}
 
                     {/* Liste des adhérents */}
                     {loading ? (
-                        <div className="flex items-center justify-center py-8">
-                            <i className="fas fa-spinner fa-spin text-2xl text-jaune"></i>
+                        <div className="flex items-center justify-center py-4 md:py-8">
+                            <i className="fas fa-spinner fa-spin text-xl md:text-2xl text-jaune"></i>
                         </div>
                     ) : (
-                        <div className="max-h-96 overflow-y-auto border border-gris rounded-md">
+                        <div className="max-h-64 md:max-h-96 overflow-y-auto border border-gris rounded-md">
                             {filteredAdherents.map((adherent) => (
                                 <label
                                     key={adherent.id}
-                                    className="flex items-center p-3 hover:bg-jaune-clair transition-colors cursor-pointer border-b border-gris last:border-b-0"
+                                    className="flex items-center p-2 md:p-3 hover:bg-jaune-clair transition-colors cursor-pointer border-b border-gris last:border-b-0"
                                 >
                                     <input
                                         type="checkbox"
                                         checked={selectedAdherents.includes(adherent.id)}
                                         onChange={() => toggleAdherent(adherent.id)}
-                                        className="h-4 w-4 text-jaune border-gris rounded focus:ring-jaune"
+                                        className="h-3 w-3 md:h-4 md:w-4 text-jaune border-gris rounded focus:ring-jaune"
                                     />
-                                    <div className="ml-3 flex items-center flex-1">
+                                    <div className="ml-2 md:ml-3 flex items-center flex-1">
                                         {adherent.photo ? (
                                             <img
                                                 src={adherent.photo}
                                                 alt={adherent.nom_complet}
-                                                className="w-10 h-10 rounded-full object-cover mr-3"
+                                                className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover mr-2 md:mr-3"
                                             />
                                         ) : (
-                                            <div className="w-10 h-10 bg-jaune rounded-full flex items-center justify-center mr-3">
-                                                <span className="text-noir-fonce font-bold text-sm">
+                                            <div className="w-8 h-8 md:w-10 md:h-10 bg-jaune rounded-full flex items-center justify-center mr-2 md:mr-3">
+                                                <span className="text-noir-fonce font-bold text-xs md:text-sm">
                                                     {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
                                                 </span>
                                             </div>
                                         )}
                                         <div>
-                                            <p className="font-medium text-noir-fonce">{adherent.nom_complet}</p>
-                                            <p className="text-sm text-noir-leger">
+                                            <p className="font-medium text-noir-fonce text-sm md:text-base">{adherent.nom_complet}</p>
+                                            <p className="text-xs md:text-sm text-noir-leger">
                                                 {adherent.matricule} - {adherent.direction}
                                             </p>
                                         </div>
@@ -312,32 +312,32 @@ const ActionsCreate = () => {
                         </div>
                     )}
 
-                    <p className="text-sm text-noir-leger mt-2">
+                    <p className="text-xs md:text-sm text-noir-leger mt-1 md:mt-2">
                         <i className="fas fa-info-circle mr-1"></i>
                         <span>{selectedAdherents.length}</span> adhérent(s) sélectionné(s)
                     </p>
                 </div>
 
                 {/* Boutons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-end pt-6 border-t border-gris">
+                <div className="flex flex-col sm:flex-row gap-2 md:gap-4 justify-end pt-4 md:pt-6 border-t border-gris">
                     <Link
                         to="/actions"
-                        className="px-6 py-2 border border-gris text-noir-leger rounded-md hover:bg-gris-clair transition-colors text-center"
+                        className="px-4 md:px-6 py-1.5 md:py-2 border border-gris text-noir-leger rounded-md hover:bg-gris-clair transition-colors text-center text-sm md:text-base"
                     >
-                        <i className="fas fa-times mr-2"></i>Annuler
+                        <i className="fas fa-times mr-1 md:mr-2"></i>Annuler
                     </Link>
                     <button
                         type="submit"
                         disabled={saving}
-                        className="px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 md:px-6 py-1.5 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                     >
                         {saving ? (
                             <>
-                                <i className="fas fa-spinner fa-spin mr-2"></i>Création...
+                                <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i>Création...
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-save mr-2"></i>Créer l'Action
+                                <i className="fas fa-save mr-1 md:mr-2"></i>Créer l'Action
                             </>
                         )}
                     </button>
