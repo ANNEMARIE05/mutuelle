@@ -42,7 +42,6 @@ const ActionsList = () => {
             {/* En-tête */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-noir-fonce mb-2">Liste des Actions</h1>
                     <p className="text-noir-leger">{actions.length} action(s) au total</p>
                 </div>
                 <div className="mt-4 md:mt-0">
@@ -56,110 +55,120 @@ const ActionsList = () => {
             </div>
 
             {/* Liste des actions */}
-            <div className="space-y-3">
-                {actions.length > 0 ? (
-                    actions.map((action) => (
-                        <div
-                            key={action.id}
-                            className="bg-white rounded shadow overflow-hidden hover:shadow-md transition-shadow"
-                        >
-                            <div className="p-4">
-                                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                                    {/* Informations de l'action */}
-                                    <div className="flex items-start mb-4 lg:mb-0">
-                                        <div className="bg-jaune p-4 rounded-md mr-4">
-                                            <i className="fas fa-bolt text-2xl text-noir-fonce"></i>
+            <div className="bg-white rounded shadow overflow-hidden">
+                {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                        <i className="fas fa-spinner fa-spin text-4xl text-jaune"></i>
+                    </div>
+                ) : actions.length > 0 ? (
+                    <>
+                        {/* Vue desktop */}
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gris-clair border-b border-gris">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Type d'Action</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Date d'Application</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Montant</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Adhérents</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Description</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gris">
+                                    {actions.map((action) => (
+                                        <tr key={action.id} className="hover:bg-jaune-clair transition-colors">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex items-center">
+                                                    <div className="bg-jaune p-2 rounded-md mr-3">
+                                                        <i className="fas fa-bolt text-noir-fonce"></i>
+                                                    </div>
+                                                    <div className="text-sm font-medium text-noir-fonce">{action.type_action}</div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-noir-leger">
+                                                    <i className="far fa-calendar-alt mr-1"></i>
+                                                    {formatDate(action.date_application)}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm font-semibold text-noir-fonce">
+                                                    {formatNumber(action.montant)} FCFA
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-blue-100 text-blue-800">
+                                                    <i className="fas fa-users mr-1"></i>
+                                                    {action.adherents?.length || 0} adhérent(s)
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="text-sm text-noir-leger max-w-xs truncate">
+                                                    {action.description || '-'}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <Link
+                                                    to={`/actions/${action.id}`}
+                                                    className="text-jaune-fonce hover:text-jaune"
+                                                    title="Voir détails"
+                                                >
+                                                    <i className="fas fa-eye"></i>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Vue mobile */}
+                        <div className="md:hidden divide-y divide-gris">
+                            {actions.map((action) => (
+                                <div key={action.id} className="p-4 hover:bg-jaune-clair transition-colors">
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div className="flex items-center">
+                                            <div className="bg-jaune p-3 rounded-md mr-3">
+                                                <i className="fas fa-bolt text-noir-fonce"></i>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-noir-fonce">{action.type_action}</p>
+                                                <p className="text-xs text-noir-leger">
+                                                    <i className="far fa-calendar-alt mr-1"></i>
+                                                    {formatDate(action.date_application)}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h3 className="text-xl font-bold text-noir-fonce">{action.type_action}</h3>
-                                            <p className="text-sm text-noir-leger mt-1">
-                                                <i className="far fa-calendar-alt mr-1"></i>
-                                                Date d'application : {formatDate(action.date_application)}
-                                            </p>
-                                            {action.description && (
-                                                <p className="text-sm text-noir-leger mt-2">{action.description}</p>
-                                            )}
-                                        </div>
+                                        <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-blue-100 text-blue-800">
+                                            <i className="fas fa-users mr-1"></i>
+                                            {action.adherents?.length || 0}
+                                        </span>
                                     </div>
 
-                                    {/* Montant et statistiques */}
-                                    <div className="flex flex-col items-end">
-                                        <p className="text-2xl font-bold text-noir-fonce">
+                                    <div className="mb-3">
+                                        <p className="text-lg font-bold text-noir-fonce">
                                             {formatNumber(action.montant)} FCFA
                                         </p>
-                                        <p className="text-sm text-noir-leger mt-1">
-                                            <i className="fas fa-users mr-1"></i>
-                                            {action.adherents?.length || 0} adhérent(s)
-                                        </p>
+                                        {action.description && (
+                                            <p className="text-sm text-noir-leger mt-1">{action.description}</p>
+                                        )}
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <Link
+                                            to={`/actions/${action.id}`}
+                                            className="flex-1 text-center px-3 py-2 bg-jaune text-noir-fonce rounded-md text-sm"
+                                        >
+                                            <i className="fas fa-eye mr-1"></i>Voir détails
+                                        </Link>
                                     </div>
                                 </div>
-
-                                {/* Liste des adhérents concernés */}
-                                {action.adherents && action.adherents.length > 0 && (
-                                    <div className="mt-6 pt-6 border-t border-gris">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <h4 className="text-sm font-semibold text-noir-leger uppercase">
-                                                <i className="fas fa-users mr-2"></i>Adhérents Concernés
-                                            </h4>
-                                            <Link
-                                                to={`/actions/${action.id}`}
-                                                className="text-sm text-jaune-fonce hover:text-jaune"
-                                            >
-                                                Voir détails <i className="fas fa-chevron-right ml-1"></i>
-                                            </Link>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {action.adherents.slice(0, 6).map((adherent) => (
-                                                <div
-                                                    key={adherent.id}
-                                                    className="flex items-center p-3 bg-gris-clair rounded-md hover:bg-jaune-clair transition-colors"
-                                                >
-                                                    {adherent.photo ? (
-                                                        <img
-                                                            src={adherent.photo}
-                                                            alt={adherent.nom_complet}
-                                                            className="w-8 h-8 rounded-full object-cover mr-2"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-8 h-8 bg-jaune rounded-full flex items-center justify-center mr-2">
-                                                            <span className="text-noir-fonce font-bold text-xs">
-                                                                {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-sm font-medium text-noir-fonce truncate">
-                                                            {adherent.nom_complet}
-                                                        </p>
-                                                        <p className="text-xs text-noir-leger truncate">
-                                                            {adherent.matricule}
-                                                        </p>
-                                                    </div>
-                                                    <span className="ml-2 px-2 py-1 text-xs font-semibold rounded-sm bg-green-100 text-green-800">
-                                                        Appliquée
-                                                    </span>
-                                                </div>
-                                            ))}
-
-                                            {action.adherents.length > 6 && (
-                                                <div className="flex items-center justify-center p-3 bg-gris-clair rounded-md">
-                                                    <Link
-                                                        to={`/actions/${action.id}`}
-                                                        className="text-sm text-jaune-fonce hover:text-jaune font-medium"
-                                                    >
-                                                        +{action.adherents.length - 6} autre(s)
-                                                    </Link>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            ))}
                         </div>
-                    ))
+                    </>
                 ) : (
-                    <div className="bg-white rounded-md shadow-md p-12 text-center">
+                    <div className="text-center py-12">
                         <i className="fas fa-bolt text-6xl text-gris mb-4"></i>
                         <p className="text-noir-leger text-lg mb-4">Aucune action créée</p>
                         <Link

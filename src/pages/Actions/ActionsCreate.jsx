@@ -6,6 +6,8 @@ const ActionsCreate = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [selectingAll, setSelectingAll] = useState(false);
+    const [deselectingAll, setDeselectingAll] = useState(false);
     const [errors, setErrors] = useState({});
     const [adherents, setAdherents] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -51,13 +53,19 @@ const ActionsCreate = () => {
         );
     };
 
-    const selectAll = () => {
+    const selectAll = async () => {
+        setSelectingAll(true);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Délai de 3 secondes
         const filteredIds = filteredAdherents.map((a) => a.id);
         setSelectedAdherents(filteredIds);
+        setSelectingAll(false);
     };
 
-    const deselectAll = () => {
+    const deselectAll = async () => {
+        setDeselectingAll(true);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Délai de 3 secondes
         setSelectedAdherents([]);
+        setDeselectingAll(false);
     };
 
     const handleSubmit = async (e) => {
@@ -98,15 +106,27 @@ const ActionsCreate = () => {
 
     return (
         <div className="max-w-4xl mx-auto">
+            {/* Bouton retour et breadcrumb */}
+            <div className="flex items-center justify-between mb-6">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="flex items-center px-4 py-2 text-noir-leger hover:text-jaune hover:bg-jaune-clair rounded transition-colors"
+                >
+                    <i className="fas fa-arrow-left mr-2"></i>Retour
+                </button>
+                <div className="hidden md:block">
+                    <div className="flex items-center text-sm text-noir-leger">
+                        <Link to="/actions" className="hover:text-jaune">
+                            <i className="fas fa-bolt mr-2"></i>Actions
+                        </Link>
+                        <i className="fas fa-chevron-right mx-2"></i>
+                        <span className="text-noir">Nouvelle action</span>
+                    </div>
+                </div>
+            </div>
+
             {/* En-tête */}
             <div className="mb-6">
-                <div className="flex items-center text-sm text-noir-leger mb-2">
-                    <Link to="/actions" className="hover:text-jaune">
-                        <i className="fas fa-bolt mr-2"></i>Actions
-                    </Link>
-                    <i className="fas fa-chevron-right mx-2"></i>
-                    <span className="text-noir">Nouvelle action</span>
-                </div>
                 <h1 className="text-3xl font-bold text-noir-fonce">
                     <i className="fas fa-plus-circle text-jaune mr-2"></i>Créer une Action
                 </h1>
@@ -133,16 +153,24 @@ const ActionsCreate = () => {
                             <label htmlFor="type_action" className="block text-sm font-medium text-noir mb-2">
                                 Type d'Action <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 name="type_action"
                                 id="type_action"
                                 value={formData.type_action}
                                 onChange={handleChange}
                                 required
-                                placeholder="Ex: Bonus, Pénalité, Aide exceptionnelle..."
                                 className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
-                            />
+                            >
+                                <option value="">Sélectionner un type d'action...</option>
+                                <option value="Bonus">Bonus</option>
+                                <option value="Prime">Prime</option>
+                                <option value="Aide exceptionnelle">Aide exceptionnelle</option>
+                                <option value="Remboursement">Remboursement</option>
+                                <option value="Cotisation">Cotisation</option>
+                                <option value="Pénalité">Pénalité</option>
+                                <option value="Ajustement">Ajustement</option>
+                                <option value="Autre">Autre</option>
+                            </select>
                             {errors.type_action && <p className="text-red-500 text-xs mt-1">{errors.type_action[0]}</p>}
                         </div>
 
@@ -223,16 +251,34 @@ const ActionsCreate = () => {
                         <button
                             type="button"
                             onClick={selectAll}
-                            className="px-4 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce rounded-md text-sm transition-colors"
+                            disabled={selectingAll}
+                            className="px-4 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i className="fas fa-check-double mr-2"></i>Tout sélectionner
+                            {selectingAll ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>Sélection...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-check-double mr-2"></i>Tout sélectionner
+                                </>
+                            )}
                         </button>
                         <button
                             type="button"
                             onClick={deselectAll}
-                            className="px-4 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md text-sm transition-colors"
+                            disabled={deselectingAll}
+                            className="px-4 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i className="fas fa-times mr-2"></i>Tout désélectionner
+                            {deselectingAll ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>Désélection...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-times mr-2"></i>Tout désélectionner
+                                </>
+                            )}
                         </button>
                     </div>
 

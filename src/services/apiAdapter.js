@@ -1,6 +1,9 @@
 // Adaptateur API qui utilise le mock API au lieu de Laravel
 import { mockApi } from './mockApi';
 
+// Helper pour simuler un délai de 3 secondes
+const delay = (ms = 3000) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const apiAdapter = {
     // Auth
     async login(email, password, remember) {
@@ -38,6 +41,7 @@ export const apiAdapter = {
     },
 
     async exportAdherents() {
+        await delay(3000); // Délai de 3 secondes
         const { data } = await mockApi.getAdherents();
         
         // Créer CSV
@@ -89,6 +93,7 @@ export const apiAdapter = {
 
     // Profil
     async updatePassword(data) {
+        await delay(3000); // Délai de 3 secondes
         // Simuler la mise à jour du mot de passe
         return Promise.resolve({ message: 'Mot de passe mis à jour avec succès' });
     }

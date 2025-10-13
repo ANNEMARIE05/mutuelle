@@ -5,6 +5,10 @@ import apiAdapter from '../../services/apiAdapter';
 const AdherentsList = () => {
     const [adherents, setAdherents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searching, setSearching] = useState(false);
+    const [resetting, setResetting] = useState(false);
+    const [exporting, setExporting] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
     const [directions, setDirections] = useState([]);
     const [filters, setFilters] = useState({
         recherche: '',
@@ -37,19 +41,27 @@ const AdherentsList = () => {
         });
     };
 
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         e.preventDefault();
-        fetchAdherents();
+        setSearching(true);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Délai de 3 secondes
+        await fetchAdherents();
+        setSearching(false);
     };
 
-    const handleReset = () => {
+    const handleReset = async () => {
+        setResetting(true);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Délai de 3 secondes
         setFilters({
             recherche: '',
             statut: '',
             direction: '',
             situation_matrimoniale: ''
         });
-        setTimeout(() => fetchAdherents(), 0);
+        setTimeout(async () => {
+            await fetchAdherents();
+            setResetting(false);
+        }, 0);
     };
 
     const handleDelete = async (id) => {
@@ -58,19 +70,25 @@ const AdherentsList = () => {
         }
 
         try {
+            setDeletingId(id);
             await apiAdapter.deleteAdherent(id);
             fetchAdherents();
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             alert('Une erreur est survenue lors de la suppression');
+        } finally {
+            setDeletingId(null);
         }
     };
 
     const handleExport = async () => {
         try {
+            setExporting(true);
             await apiAdapter.exportAdherents();
         } catch (error) {
             console.error('Erreur lors de l\'export:', error);
+        } finally {
+            setExporting(false);
         }
     };
 
@@ -79,15 +97,23 @@ const AdherentsList = () => {
             {/* En-tête */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-noir-fonce mb-2">Liste des Adhérents</h1>
                     <p className="text-noir-leger">{adherents.length} adhérent(s) au total</p>
                 </div>
                 <div className="mt-4 md:mt-0 flex gap-3">
                     <button
                         onClick={handleExport}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
+                        disabled={exporting}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <i className="fas fa-file-export mr-2"></i>Exporter CSV
+                        {exporting ? (
+                            <>
+                                <i className="fas fa-spinner fa-spin mr-2"></i>Export...
+                            </>
+                        ) : (
+                            <>
+                                <i className="fas fa-file-export mr-2"></i>Exporter CSV
+                            </>
+                        )}
                     </button>
                     <Link
                         to="/adherents/creer"
@@ -179,16 +205,34 @@ const AdherentsList = () => {
                     <div className="flex gap-3">
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors"
+                            disabled={searching}
+                            className="px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i className="fas fa-search mr-2"></i>Rechercher
+                            {searching ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>Recherche...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-search mr-2"></i>Rechercher
+                                </>
+                            )}
                         </button>
                         <button
                             type="button"
                             onClick={handleReset}
-                            className="px-6 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md transition-colors"
+                            disabled={resetting}
+                            className="px-6 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <i className="fas fa-redo mr-2"></i>Réinitialiser
+                            {resetting ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>Réinitialisation...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-redo mr-2"></i>Réinitialiser
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>
@@ -274,10 +318,15 @@ const AdherentsList = () => {
                                                 </Link>
                                                 <button
                                                     onClick={() => handleDelete(adherent.id)}
-                                                    className="text-red-600 hover:text-red-800"
+                                                    disabled={deletingId === adherent.id}
+                                                    className="text-red-600 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                                     title="Supprimer"
                                                 >
-                                                    <i className="fas fa-trash"></i>
+                                                    {deletingId === adherent.id ? (
+                                                        <i className="fas fa-spinner fa-spin"></i>
+                                                    ) : (
+                                                        <i className="fas fa-trash"></i>
+                                                    )}
                                                 </button>
                                             </td>
                                         </tr>

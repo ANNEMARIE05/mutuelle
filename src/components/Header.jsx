@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Header = ({ onMenuClick }) => {
@@ -8,6 +8,7 @@ const Header = ({ onMenuClick }) => {
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -26,6 +27,27 @@ const Header = ({ onMenuClick }) => {
         navigate('/connexion');
     };
 
+    // Fonction pour obtenir le titre de la page
+    const getPageTitle = () => {
+        const path = location.pathname;
+        
+        if (path === '/dashboard') return 'Dashboard';
+        if (path.startsWith('/adherents')) {
+            if (path === '/adherents') return 'Liste des Adhérents';
+            if (path.includes('/creer')) return 'Nouvel Adhérent';
+            if (path.includes('/modifier')) return 'Modifier Adhérent';
+            return 'Détails Adhérent';
+        }
+        if (path.startsWith('/actions')) {
+            if (path === '/actions') return 'Liste des Actions';
+            if (path.includes('/creer')) return 'Nouvelle Action';
+            return 'Détails Action';
+        }
+        if (path === '/profile') return 'Mon Profil';
+        
+        return 'Dashboard';
+    };
+
     return (
         <>
             <header className="bg-white border-b border-gris shadow-sm">
@@ -40,7 +62,7 @@ const Header = ({ onMenuClick }) => {
                     {/* Titre page desktop */}
                     <div className="hidden lg:block">
                         <h1 className="text-2xl font-bold text-noir-fonce">
-                            {/* Le titre sera géré par chaque page */}
+                            {getPageTitle()}
                         </h1>
                     </div>
 

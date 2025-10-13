@@ -105,34 +105,73 @@ const ActionsShow = () => {
                 </h2>
 
                 {action.adherents && action.adherents.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {action.adherents.map((adherent) => (
-                            <Link
+                            <div
                                 key={adherent.id}
-                                to={`/adherents/${adherent.id}`}
-                                className="flex items-center p-3 bg-gris-clair rounded-md hover:bg-jaune-clair transition-colors"
+                                className="border border-gris rounded-lg p-4 hover:shadow-md transition-shadow"
                             >
-                                {adherent.photo ? (
-                                    <img
-                                        src={adherent.photo}
-                                        alt={adherent.nom_complet}
-                                        className="w-12 h-12 rounded-full object-cover mr-3"
-                                    />
-                                ) : (
-                                    <div className="w-12 h-12 bg-jaune rounded-full flex items-center justify-center mr-3">
-                                        <span className="text-noir-fonce font-bold">
-                                            {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
-                                        </span>
+                                {/* En-tête de la carte */}
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex items-center">
+                                        {adherent.photo ? (
+                                            <img
+                                                src={adherent.photo}
+                                                alt={adherent.nom_complet}
+                                                className="w-16 h-16 rounded-full object-cover mr-3"
+                                            />
+                                        ) : (
+                                            <div className="w-16 h-16 bg-jaune rounded-full flex items-center justify-center mr-3">
+                                                <span className="text-noir-fonce font-bold text-xl">
+                                                    {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h3 className="font-bold text-noir-fonce">{adherent.nom_complet}</h3>
+                                            <p className="text-sm text-noir-leger">{adherent.matricule}</p>
+                                        </div>
                                     </div>
-                                )}
-                                <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-noir-fonce truncate">{adherent.nom_complet}</p>
-                                    <p className="text-xs text-noir-leger truncate">{adherent.matricule}</p>
+                                    <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-green-100 text-green-800">
+                                        Appliquée
+                                    </span>
                                 </div>
-                                <span className="ml-2 px-2 py-1 text-xs font-semibold rounded-sm bg-green-100 text-green-800">
-                                    Appliquée
-                                </span>
-                            </Link>
+
+                                {/* Informations détaillées */}
+                                <div className="space-y-2 text-sm border-t border-gris pt-3">
+                                    <div className="flex items-center">
+                                        <i className="fas fa-envelope text-jaune w-5 mr-2"></i>
+                                        <span className="text-noir-leger">{adherent.email || 'Non renseigné'}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-phone text-jaune w-5 mr-2"></i>
+                                        <span className="text-noir-leger">{adherent.numero_telephone || 'Non renseigné'}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-building text-jaune w-5 mr-2"></i>
+                                        <span className="text-noir-leger">{adherent.direction || 'Non renseigné'}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-briefcase text-jaune w-5 mr-2"></i>
+                                        <span className="text-noir-leger">{adherent.fonction || 'Non renseigné'}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-certificate text-jaune w-5 mr-2"></i>
+                                        <span className="text-noir-leger">{adherent.grade || 'Non renseigné'}</span>
+                                    </div>
+                                </div>
+
+                                {/* Bouton voir plus */}
+                                <div className="mt-4 pt-3 border-t border-gris">
+                                    <Link
+                                        to={`/adherents/${adherent.id}`}
+                                        className="text-jaune hover:text-jaune-fonce text-sm font-medium flex items-center"
+                                    >
+                                        Voir le profil complet
+                                        <i className="fas fa-arrow-right ml-2"></i>
+                                    </Link>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 ) : (

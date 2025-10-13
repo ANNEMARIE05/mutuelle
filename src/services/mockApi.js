@@ -76,9 +76,13 @@ const saveData = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
 };
 
+// Helper pour simuler un délai (loader de 3 secondes)
+const delay = (ms = 3000) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const mockApi = {
     // Auth
-    login: (email, password) => {
+    login: async (email, password) => {
+        await delay(3000); // Délai de 3 secondes
         const users = getData(STORAGE_KEYS.USERS);
         const user = users.find(u => u.email === email && u.password === password);
         
@@ -169,7 +173,8 @@ export const mockApi = {
         return Promise.reject({ response: { status: 404 } });
     },
 
-    createAdherent: (data) => {
+    createAdherent: async (data) => {
+        await delay(3000); // Délai de 3 secondes
         const adherents = getData(STORAGE_KEYS.ADHERENTS);
         const newId = Math.max(...adherents.map(a => a.id), 0) + 1;
         
@@ -189,7 +194,8 @@ export const mockApi = {
         return Promise.resolve(newAdherent);
     },
 
-    updateAdherent: (id, data) => {
+    updateAdherent: async (id, data) => {
+        await delay(3000); // Délai de 3 secondes
         const adherents = getData(STORAGE_KEYS.ADHERENTS);
         const index = adherents.findIndex(a => a.id === parseInt(id));
         
@@ -206,7 +212,8 @@ export const mockApi = {
         return Promise.reject({ response: { status: 404 } });
     },
 
-    deleteAdherent: (id) => {
+    deleteAdherent: async (id) => {
+        await delay(3000); // Délai de 3 secondes
         const adherents = getData(STORAGE_KEYS.ADHERENTS);
         const filtered = adherents.filter(a => a.id !== parseInt(id));
         saveData(STORAGE_KEYS.ADHERENTS, filtered);
@@ -241,7 +248,8 @@ export const mockApi = {
         return Promise.reject({ response: { status: 404 } });
     },
 
-    createAction: (data) => {
+    createAction: async (data) => {
+        await delay(3000); // Délai de 3 secondes
         const actions = getData(STORAGE_KEYS.ACTIONS);
         const newId = Math.max(...actions.map(a => a.id), 0) + 1;
         

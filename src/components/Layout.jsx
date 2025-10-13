@@ -4,11 +4,12 @@ import Header from './Header';
 
 const Layout = ({ children }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     return (
         <div className="flex h-screen overflow-hidden bg-gris-clair">
             {/* Sidebar Desktop */}
-            <Sidebar />
+            <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
             
             {/* Mobile Menu Overlay */}
             {mobileMenuOpen && (

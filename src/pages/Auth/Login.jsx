@@ -8,6 +8,7 @@ const Login = () => {
     const [remember, setRemember] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -20,7 +21,34 @@ const Login = () => {
             await login(email, password, remember);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Les identifiants ne correspondent pas.');
+            // Gestion détaillée des erreurs
+            if (err.message === 'Network Error') {
+                setError('Erreur de connexion. Veuillez vérifier votre connexion internet.');
+            } else if (err.response) {
+                // Erreurs avec réponse du serveur
+                switch (err.response.status) {
+                    case 401:
+                        setError('Email ou mot de passe incorrect. Veuillez réessayer.');
+                        break;
+                    case 422:
+                        setError('Les données saisies sont invalides. Veuillez vérifier vos informations.');
+                        break;
+                    case 429:
+                        setError('Trop de tentatives de connexion. Veuillez réessayer dans quelques minutes.');
+                        break;
+                    case 500:
+                        setError('Erreur serveur. Veuillez réessayer plus tard.');
+                        break;
+                    default:
+                        setError(err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.');
+                }
+            } else if (err.request) {
+                // Requête envoyée mais pas de réponse
+                setError('Aucune réponse du serveur. Veuillez vérifier votre connexion.');
+            } else {
+                // Autre type d'erreur
+                setError('Une erreur inattendue est survenue. Veuillez réessayer.');
+            }
         } finally {
             setLoading(false);
         }
@@ -38,7 +66,7 @@ const Login = () => {
                         <div className="inline-block bg-white/20 backdrop-blur-sm p-3 rounded mb-6">
                             <i className="fas fa-hospital text-4xl text-white"></i>
                         </div>
-                        <h1 className="text-4xl font-bold mb-2">Bon retour !</h1>
+                        <h1 className="text-4xl font-bold mb-2">Bienvenue !</h1>
                         <p className="text-white/90 text-lg">
                             Connectez-vous à votre espace de gestion de mutuelle
                         </p>
@@ -65,21 +93,15 @@ const Login = () => {
 
                     {/* Messages d'erreur */}
                     {error && (
-                        <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded flex items-center">
-                            <i className="fas fa-exclamation-circle mr-2"></i>
-                            {error}
+                        <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-800 px-4 py-3 rounded shadow-sm animate-shake">
+                            <div className="flex items-start">
+                                <i className="fas fa-exclamation-circle mr-3 mt-0.5 text-red-600"></i>
+                                <div>
+                                    <p className="font-medium text-sm">{error}</p>
+                                </div>
+                            </div>
                         </div>
                     )}
-
-                    {/* Info box */}
-                    <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded">
-                        <p className="text-sm">
-                            <i className="fas fa-info-circle mr-2"></i>
-                            <strong>Identifiants de test:</strong><br/>
-                            Email: admin@mutuelle.com<br/>
-                            Password: password
-                        </p>
-                    </div>
 
                     {/* Formulaire */}
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -93,9 +115,13 @@ const Login = () => {
                                 name="email"
                                 id="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    if (error) setError('');
+                                }}
                                 required
-                                className="w-full px-4 py-3 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors"
+                                disabled={loading}
+                                className="w-full px-4 py-3 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 placeholder="admin@mutuelle.com"
                             />
                         </div>
@@ -105,16 +131,30 @@ const Login = () => {
                             <label htmlFor="password" className="block text-sm font-medium text-noir-leger mb-2">
                                 Mot de passe
                             </label>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                className="w-full px-4 py-3 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors"
-                                placeholder="••••••••"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        if (error) setError('');
+                                    }}
+                                    required
+                                    disabled={loading}
+                                    className="w-full px-4 py-3 pr-12 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    placeholder="••••••••"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    disabled={loading}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-noir-leger hover:text-noir-fonce focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                </button>
+                            </div>
                         </div>
 
                         {/* Options */}

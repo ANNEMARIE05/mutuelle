@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import apiAdapter from '../services/apiAdapter';
 
 const Dashboard = () => {
+    const { user } = useAuth();
     const [statistiques, setStatistiques] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
     useEffect(() => {
         fetchStatistiques();
+        
+        // Afficher la popup de bienvenue
+        const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+        if (!hasSeenWelcome) {
+            setTimeout(() => {
+                setShowWelcomeModal(true);
+                sessionStorage.setItem('hasSeenWelcome', 'true');
+            }, 500);
+        }
     }, []);
 
     const fetchStatistiques = async () => {
@@ -38,7 +50,6 @@ const Dashboard = () => {
             {/* En-tête */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-noir-fonce mb-2">Dashboard</h1>
                     <p className="text-noir-leger">Vue d'ensemble de la mutuelle</p>
                 </div>
                 <div className="mt-4 md:mt-0">
@@ -260,6 +271,63 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Popup de bienvenue */}
+            {showWelcomeModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden animate-scale-in">
+                        {/* En-tête avec dégradé */}
+                        <div className="bg-gradient-to-r from-jaune to-jaune-fonce p-6 text-center">
+                            <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                <i className="fas fa-hands-helping text-4xl text-jaune"></i>
+                            </div>
+                            <h2 className="text-2xl font-bold text-noir-fonce">
+                                Bienvenue {user?.name} ! 🎉
+                            </h2>
+                        </div>
+
+                        {/* Contenu */}
+                        <div className="p-6">
+                            <p className="text-noir-leger text-center mb-6 leading-relaxed">
+                                Nous sommes ravis de vous revoir ! Vous êtes maintenant connecté à votre espace de gestion de mutuelle.
+                            </p>
+
+                            {/* Informations rapides */}
+                            <div className="space-y-3 mb-6">
+                                <div className="flex items-center p-3 bg-jaune-clair rounded-lg">
+                                    <i className="fas fa-users text-jaune-fonce mr-3 text-xl"></i>
+                                    <div>
+                                        <p className="text-sm font-semibold text-noir-fonce">Gestion des adhérents</p>
+                                        <p className="text-xs text-noir-leger">Consultez et gérez vos adhérents</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center p-3 bg-green-50 rounded-lg">
+                                    <i className="fas fa-bolt text-green-600 mr-3 text-xl"></i>
+                                    <div>
+                                        <p className="text-sm font-semibold text-noir-fonce">Actions & Événements</p>
+                                        <p className="text-xs text-noir-leger">Créez et suivez vos actions</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center p-3 bg-blue-50 rounded-lg">
+                                    <i className="fas fa-chart-line text-blue-600 mr-3 text-xl"></i>
+                                    <div>
+                                        <p className="text-sm font-semibold text-noir-fonce">Statistiques en temps réel</p>
+                                        <p className="text-xs text-noir-leger">Suivez vos performances</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Bouton de fermeture */}
+                            <button
+                                onClick={() => setShowWelcomeModal(false)}
+                                className="w-full bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold py-3 px-6 rounded-lg transition-colors shadow-sm"
+                            >
+                                Commencer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
