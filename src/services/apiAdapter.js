@@ -14,6 +14,19 @@ export const apiAdapter = {
         return Promise.resolve();
     },
 
+    // Password reset
+    async sendOtp(email) {
+        return mockApi.sendOtp(email);
+    },
+
+    async verifyOtp(email, code) {
+        return mockApi.verifyOtp(email, code);
+    },
+
+    async resetPassword(email, code, newPassword) {
+        return mockApi.resetPassword(email, code, newPassword);
+    },
+
     // Dashboard
     async getDashboard() {
         return mockApi.getDashboard();

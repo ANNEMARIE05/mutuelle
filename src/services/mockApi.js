@@ -3,6 +3,7 @@
 
 const STORAGE_KEYS = {
     USERS: 'mutuelle_users',
+    OTP: 'mutuelle_otp',
     ADHERENTS: 'mutuelle_adherents',
     ACTIONS: 'mutuelle_actions',
     COTISATIONS: 'mutuelle_cotisations',
@@ -50,6 +51,9 @@ const initializeData = () => {
     if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
         localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(initialData.users));
     }
+    if (!localStorage.getItem(STORAGE_KEYS.OTP)) {
+        localStorage.setItem(STORAGE_KEYS.OTP, JSON.stringify([]));
+    }
     if (!localStorage.getItem(STORAGE_KEYS.ADHERENTS)) {
         localStorage.setItem(STORAGE_KEYS.ADHERENTS, JSON.stringify(initialData.adherents));
     }
@@ -94,6 +98,57 @@ export const mockApi = {
             });
         }
         return Promise.reject({ response: { status: 401, data: { message: 'Identifiants incorrects' } } });
+    },
+
+    // Forgot password flow (OTP)
+    sendOtp: async (email) => {
+        await delay(3000);
+        const users = getData(STORAGE_KEYS.USERS);
+        const user = users.find(u => u.email === email);
+        if (!user) {
+            return Promise.reject({ response: { status: 404, data: { message: 'Utilisateur introuvable' } } });
+        }
+        const otpStore = getData(STORAGE_KEYS.OTP);
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
+        const filtered = otpStore.filter(o => o.email !== email);
+        filtered.push({ email, code, expiresAt });
+        saveData(STORAGE_KEYS.OTP, filtered);
+        // Retourner le code pour debug (dans un vrai backend on enverrait par email)
+        return Promise.resolve({ message: 'Code envoyé', code });
+    },
+
+    verifyOtp: async (email, code) => {
+        await delay(2000);
+        const otpStore = getData(STORAGE_KEYS.OTP);
+        const entry = otpStore.find(o => o.email === email);
+        if (!entry) {
+            return Promise.reject({ response: { status: 404, data: { message: 'OTP non trouvé' } } });
+        }
+        if (Date.now() > entry.expiresAt) {
+            return Promise.reject({ response: { status: 410, data: { message: 'OTP expiré' } } });
+        }
+        if (entry.code !== code) {
+            return Promise.reject({ response: { status: 422, data: { message: 'Code OTP invalide' } } });
+        }
+        return Promise.resolve({ message: 'OTP valide' });
+    },
+
+    resetPassword: async (email, code, newPassword) => {
+        await delay(3000);
+        // Verify again for safety
+        await mockApi.verifyOtp(email, code);
+        const users = getData(STORAGE_KEYS.USERS);
+        const index = users.findIndex(u => u.email === email);
+        if (index === -1) {
+            return Promise.reject({ response: { status: 404, data: { message: 'Utilisateur introuvable' } } });
+        }
+        users[index] = { ...users[index], password: newPassword };
+        saveData(STORAGE_KEYS.USERS, users);
+        // Clear OTP entry
+        const otpStore = getData(STORAGE_KEYS.OTP).filter(o => o.email !== email);
+        saveData(STORAGE_KEYS.OTP, otpStore);
+        return Promise.resolve({ message: 'Mot de passe réinitialisé' });
     },
 
     // Dashboard

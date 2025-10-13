@@ -2,6 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import Login from './pages/Auth/Login';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import OtpVerify from './pages/Auth/OtpVerify';
+import ResetPassword from './pages/Auth/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import AdherentsList from './pages/Adherents/AdherentsList';
 import AdherentsCreate from './pages/Adherents/AdherentsCreate';
@@ -58,6 +61,30 @@ function App() {
                 element={
                     <GuestRoute>
                         <Login />
+                    </GuestRoute>
+                }
+            />
+            <Route
+                path="/mot-de-passe-oublie"
+                element={
+                    <GuestRoute>
+                        <ForgotPassword />
+                    </GuestRoute>
+                }
+            />
+            <Route
+                path="/verification-otp"
+                element={
+                    <GuestRoute>
+                        <OtpVerify />
+                    </GuestRoute>
+                }
+            />
+            <Route
+                path="/reinitialiser-mot-de-passe"
+                element={
+                    <GuestRoute>
+                        <ResetPassword />
                     </GuestRoute>
                 }
             />

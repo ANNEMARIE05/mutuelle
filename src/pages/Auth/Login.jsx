@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
@@ -171,9 +171,9 @@ const Login = () => {
                                     Se souvenir de moi
                                 </label>
                             </div>
-                            <a href="#" className="text-xs md:text-sm text-noir-leger hover:text-jaune">
+                            <Link to="/mot-de-passe-oublie" className="text-xs md:text-sm text-noir-leger hover:text-jaune">
                                 Mot de passe oublié ?
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Bouton de connexion */}
