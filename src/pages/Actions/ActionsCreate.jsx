@@ -16,7 +16,6 @@ const ActionsCreate = () => {
         type_action: '',
         montant: '',
         date_application: new Date().toISOString().split('T')[0],
-        description: ''
     });
 
     useEffect(() => {
@@ -210,21 +209,6 @@ const ActionsCreate = () => {
                             )}
                         </div>
 
-                        <div className="md:col-span-2">
-                            <label htmlFor="description" className="block text-sm font-medium text-noir mb-2">
-                                Description
-                            </label>
-                            <textarea
-                                name="description"
-                                id="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                rows="3"
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
-                                placeholder="Description détaillée de l'action..."
-                            ></textarea>
-                            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description[0]}</p>}
-                        </div>
                     </div>
                 </div>
 

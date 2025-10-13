@@ -75,39 +75,38 @@ const Login = () => {
             </div>
 
             {/* Section droite avec formulaire */}
-            <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 py-12 bg-white">
-                <div className="max-w-md mx-auto w-full">
+            <div className="w-full lg:w-1/2 flex flex-col justify-center items-center px-4 py-6 md:px-8 md:py-12 bg-white">
+                <div className="max-w-md w-full">
                     {/* Logo pour mobile */}
-                    <div className="lg:hidden text-center mb-8">
-                        <div className="inline-block bg-jaune text-noir-fonce p-3 rounded mb-4">
-                            <i className="fas fa-hospital text-3xl"></i>
+                    <div className="lg:hidden text-center mb-6 md:mb-8">
+                        <div className="inline-block bg-jaune text-noir-fonce p-3 md:p-4 rounded-full mb-4">
+                            <i className="fas fa-hospital text-3xl md:text-4xl"></i>
                         </div>
-                        <h1 className="text-2xl font-bold text-noir-fonce">Mutuelle</h1>
                     </div>
 
                     {/* Titre du formulaire */}
-                    <div className="mb-8">
-                        <h2 className="text-3xl font-bold text-noir-fonce mb-2">Connexion</h2>
-                        <p className="text-noir-leger">Veuillez vous connecter à votre compte.</p>
+                    <div className="text-center mb-6 md:mb-8">
+                        <h2 className="text-2xl md:text-3xl font-bold text-noir-fonce mb-2">Connexion</h2>
+                        <p className="text-sm md:text-base text-noir-leger">Veuillez vous connecter à votre compte</p>
                     </div>
 
                     {/* Messages d'erreur */}
                     {error && (
-                        <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-800 px-4 py-3 rounded shadow-sm animate-shake">
+                        <div className="mb-4 md:mb-6 bg-red-50 border-l-4 border-red-500 text-red-800 px-3 py-2 md:px-4 md:py-3 rounded shadow-sm animate-shake">
                             <div className="flex items-start">
-                                <i className="fas fa-exclamation-circle mr-3 mt-0.5 text-red-600"></i>
+                                <i className="fas fa-exclamation-circle mr-2 md:mr-3 mt-0.5 text-red-600 text-sm"></i>
                                 <div>
-                                    <p className="font-medium text-sm">{error}</p>
+                                    <p className="font-medium text-xs md:text-sm">{error}</p>
                                 </div>
                             </div>
                         </div>
                     )}
 
                     {/* Formulaire */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                         {/* Email */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-noir-leger mb-2">
+                            <label htmlFor="email" className="block text-xs md:text-sm font-medium text-noir-leger mb-1 md:mb-2">
                                 Adresse email
                             </label>
                             <input
@@ -121,14 +120,14 @@ const Login = () => {
                                 }}
                                 required
                                 disabled={loading}
-                                className="w-full px-4 py-3 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-3 py-2 md:px-4 md:py-3 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                                 placeholder="admin@mutuelle.com"
                             />
                         </div>
 
                         {/* Mot de passe */}
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-noir-leger mb-2">
+                            <label htmlFor="password" className="block text-xs md:text-sm font-medium text-noir-leger mb-1 md:mb-2">
                                 Mot de passe
                             </label>
                             <div className="relative">
@@ -143,14 +142,14 @@ const Login = () => {
                                     }}
                                     required
                                     disabled={loading}
-                                    className="w-full px-4 py-3 pr-12 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full px-3 py-2 md:px-4 md:py-3 pr-10 md:pr-12 border border-gris rounded shadow-sm focus:ring-2 focus:ring-jaune focus:border-jaune transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                                     placeholder="••••••••"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     disabled={loading}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-noir-leger hover:text-noir-fonce focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 text-noir-leger hover:text-noir-fonce focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                                 >
                                     <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                 </button>
@@ -168,11 +167,11 @@ const Login = () => {
                                     onChange={(e) => setRemember(e.target.checked)}
                                     className="h-4 w-4 text-jaune border-gris rounded focus:ring-jaune"
                                 />
-                                <label htmlFor="remember" className="ml-2 text-sm text-noir-leger">
+                                <label htmlFor="remember" className="ml-2 text-xs md:text-sm text-noir-leger">
                                     Se souvenir de moi
                                 </label>
                             </div>
-                            <a href="#" className="text-sm text-noir-leger hover:text-jaune">
+                            <a href="#" className="text-xs md:text-sm text-noir-leger hover:text-jaune">
                                 Mot de passe oublié ?
                             </a>
                         </div>
@@ -181,12 +180,13 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold py-3 px-4 rounded shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold py-2.5 md:py-3 px-4 rounded shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                         >
                             {loading ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i>
-                                    Connexion en cours...
+                                    <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i>
+                                    <span className="hidden sm:inline">Connexion en cours...</span>
+                                    <span className="sm:hidden">Connexion...</span>
                                 </>
                             ) : (
                                 'Se connecter'

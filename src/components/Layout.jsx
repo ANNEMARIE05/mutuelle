@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
                 <Header onMenuClick={() => setMobileMenuOpen(true)} />
                 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto p-3 md:p-4 lg:p-5">
+                <main className="flex-1 overflow-y-auto p-2 md:p-4 lg:p-5">
                     {children}
                 </main>
             </div>

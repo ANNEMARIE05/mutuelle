@@ -93,45 +93,50 @@ const AdherentsList = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 md:space-y-6">
             {/* En-tête */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div className="flex items-center justify-between mb-3 md:mb-6">
+                {/* Compteur */}
                 <div>
-                    <p className="text-noir-leger">{adherents.length} adhérent(s) au total</p>
+                    <p className="text-sm md:text-base text-noir-leger">
+                        {adherents.length} adhérent(s)<span className="hidden md:inline"> au total</span>
+                    </p>
                 </div>
-                <div className="mt-4 md:mt-0 flex gap-3">
+                
+                {/* Boutons */}
+                <div className="flex gap-2 md:gap-3">
                     <button
                         onClick={handleExport}
                         disabled={exporting}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 py-1.5 md:px-4 md:py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-sm"
                     >
                         {exporting ? (
                             <>
-                                <i className="fas fa-spinner fa-spin mr-2"></i>Export...
+                                <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i><span className="hidden sm:inline">Export...</span><span className="sm:hidden">...</span>
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-file-export mr-2"></i>Exporter CSV
+                                <i className="fas fa-file-export mr-1 md:mr-2"></i><span className="hidden sm:inline">Exporter CSV</span><span className="sm:hidden">CSV</span>
                             </>
                         )}
                     </button>
                     <Link
                         to="/adherents/creer"
-                        className="px-4 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors"
+                        className="px-3 py-1.5 md:px-4 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors text-xs md:text-sm"
                     >
-                        <i className="fas fa-plus mr-2"></i>Nouvel Adhérent
+                        <i className="fas fa-plus mr-1 md:mr-2"></i><span className="hidden sm:inline">Nouvel Adhérent</span><span className="sm:hidden">Nouveau</span>
                     </Link>
                 </div>
             </div>
 
             {/* Filtres et recherche */}
-            <div className="bg-white rounded shadow p-4">
-                <form onSubmit={handleSearch} className="space-y-3">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-white rounded shadow p-3 md:p-4">
+                <form onSubmit={handleSearch} className="space-y-2 md:space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
                         {/* Recherche */}
                         <div className="lg:col-span-2">
-                            <label htmlFor="recherche" className="block text-sm font-medium text-noir mb-2">
-                                <i className="fas fa-search mr-2"></i>Recherche
+                            <label htmlFor="recherche" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
+                                <i className="fas fa-search mr-1 md:mr-2"></i>Recherche
                             </label>
                             <input
                                 type="text"
@@ -140,21 +145,21 @@ const AdherentsList = () => {
                                 value={filters.recherche}
                                 onChange={handleFilterChange}
                                 placeholder="Nom, prénom, matricule, email..."
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 py-1.5 md:px-4 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm"
                             />
                         </div>
 
                         {/* Filtre par statut */}
                         <div>
-                            <label htmlFor="statut" className="block text-sm font-medium text-noir mb-2">
-                                <i className="fas fa-filter mr-2"></i>Statut
+                            <label htmlFor="statut" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
+                                <i className="fas fa-filter mr-1 md:mr-2"></i>Statut
                             </label>
                             <select
                                 name="statut"
                                 id="statut"
                                 value={filters.statut}
                                 onChange={handleFilterChange}
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 py-1.5 md:px-4 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm"
                             >
                                 <option value="">Tous</option>
                                 <option value="actif">Actifs</option>
@@ -164,15 +169,15 @@ const AdherentsList = () => {
 
                         {/* Filtre par direction */}
                         <div>
-                            <label htmlFor="direction" className="block text-sm font-medium text-noir mb-2">
-                                <i className="fas fa-building mr-2"></i>Direction
+                            <label htmlFor="direction" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
+                                <i className="fas fa-building mr-1 md:mr-2"></i>Direction
                             </label>
                             <select
                                 name="direction"
                                 id="direction"
                                 value={filters.direction}
                                 onChange={handleFilterChange}
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 py-1.5 md:px-4 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm"
                             >
                                 <option value="">Toutes</option>
                                 {directions.map((dir, index) => (
@@ -183,15 +188,15 @@ const AdherentsList = () => {
 
                         {/* Filtre par situation matrimoniale */}
                         <div>
-                            <label htmlFor="situation_matrimoniale" className="block text-sm font-medium text-noir mb-2">
-                                <i className="fas fa-heart mr-2"></i>Situation
+                            <label htmlFor="situation_matrimoniale" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
+                                <i className="fas fa-heart mr-1 md:mr-2"></i>Situation
                             </label>
                             <select
                                 name="situation_matrimoniale"
                                 id="situation_matrimoniale"
                                 value={filters.situation_matrimoniale}
                                 onChange={handleFilterChange}
-                                className="w-full px-4 py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune"
+                                className="w-full px-3 py-1.5 md:px-4 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm"
                             >
                                 <option value="">Toutes</option>
                                 <option value="Célibataire">Célibataire</option>
@@ -202,19 +207,19 @@ const AdherentsList = () => {
                         </div>
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 md:gap-3">
                         <button
                             type="submit"
                             disabled={searching}
-                            className="px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-1.5 md:px-6 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-sm"
                         >
                             {searching ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i>Recherche...
+                                    <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i>Recherche...
                                 </>
                             ) : (
                                 <>
-                                    <i className="fas fa-search mr-2"></i>Rechercher
+                                    <i className="fas fa-search mr-1 md:mr-2"></i>Rechercher
                                 </>
                             )}
                         </button>
@@ -222,15 +227,15 @@ const AdherentsList = () => {
                             type="button"
                             onClick={handleReset}
                             disabled={resetting}
-                            className="px-6 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-1.5 md:px-6 md:py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs md:text-sm"
                         >
                             {resetting ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i>Réinitialisation...
+                                    <i className="fas fa-spinner fa-spin mr-1 md:mr-2"></i><span className="hidden sm:inline">Réinitialisation...</span>
                                 </>
                             ) : (
                                 <>
-                                    <i className="fas fa-redo mr-2"></i>Réinitialiser
+                                    <i className="fas fa-redo mr-1 md:mr-2"></i><span className="hidden sm:inline">Réinitialiser</span><span className="sm:hidden">Reset</span>
                                 </>
                             )}
                         </button>
@@ -338,49 +343,49 @@ const AdherentsList = () => {
                         {/* Vue mobile */}
                         <div className="md:hidden divide-y divide-gris">
                             {adherents.map((adherent) => (
-                                <div key={adherent.id} className="p-4 hover:bg-jaune-clair transition-colors">
-                                    <div className="flex items-start justify-between mb-3">
+                                <div key={adherent.id} className="p-2.5 hover:bg-jaune-clair transition-colors">
+                                    <div className="flex items-start justify-between mb-2">
                                         <div className="flex items-center">
                                             {adherent.photo ? (
                                                 <img
                                                     src={adherent.photo}
                                                     alt={adherent.nom_complet}
-                                                    className="w-12 h-12 rounded-full object-cover mr-3"
+                                                    className="w-10 h-10 rounded-full object-cover mr-2"
                                                 />
                                             ) : (
-                                                <div className="w-12 h-12 bg-jaune rounded-full flex items-center justify-center mr-3">
-                                                    <span className="text-noir-fonce font-bold">
+                                                <div className="w-10 h-10 bg-jaune rounded-full flex items-center justify-center mr-2">
+                                                    <span className="text-noir-fonce font-bold text-xs">
                                                         {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
                                                     </span>
                                                 </div>
                                             )}
                                             <div>
-                                                <p className="font-semibold text-noir-fonce">{adherent.nom_complet}</p>
-                                                <p className="text-sm text-noir-leger">{adherent.matricule}</p>
+                                                <p className="font-semibold text-noir-fonce text-sm">{adherent.nom_complet}</p>
+                                                <p className="text-xs text-noir-leger">{adherent.matricule}</p>
                                             </div>
                                         </div>
                                         {adherent.est_actif ? (
-                                            <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-green-100 text-green-800">Actif</span>
+                                            <span className="px-1.5 py-0.5 text-xs font-semibold rounded-sm bg-green-100 text-green-800">Actif</span>
                                         ) : (
-                                            <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-red-100 text-red-800">Inactif</span>
+                                            <span className="px-1.5 py-0.5 text-xs font-semibold rounded-sm bg-red-100 text-red-800">Inactif</span>
                                         )}
                                     </div>
 
-                                    <div className="text-sm text-noir-leger mb-3 space-y-1">
-                                        <p><i className="fas fa-envelope mr-2 text-jaune"></i>{adherent.email}</p>
-                                        <p><i className="fas fa-building mr-2 text-jaune"></i>{adherent.direction}</p>
+                                    <div className="text-xs text-noir-leger mb-2 space-y-0.5">
+                                        <p><i className="fas fa-envelope mr-1.5 text-jaune text-xs"></i>{adherent.email}</p>
+                                        <p><i className="fas fa-building mr-1.5 text-jaune text-xs"></i>{adherent.direction}</p>
                                     </div>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-1.5">
                                         <Link
                                             to={`/adherents/${adherent.id}`}
-                                            className="flex-1 text-center px-3 py-2 bg-jaune text-noir-fonce rounded-md text-sm"
+                                            className="flex-1 text-center px-2 py-1.5 bg-jaune text-noir-fonce rounded-md text-xs"
                                         >
                                             <i className="fas fa-eye mr-1"></i>Voir
                                         </Link>
                                         <Link
                                             to={`/adherents/${adherent.id}/modifier`}
-                                            className="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-md text-sm"
+                                            className="flex-1 text-center px-2 py-1.5 bg-blue-600 text-white rounded-md text-xs"
                                         >
                                             <i className="fas fa-edit mr-1"></i>Modifier
                                         </Link>
@@ -390,14 +395,14 @@ const AdherentsList = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="text-center py-12">
-                        <i className="fas fa-users text-6xl text-gris mb-4"></i>
-                        <p className="text-noir-leger text-lg">Aucun adhérent trouvé</p>
+                    <div className="text-center py-8 md:py-12">
+                        <i className="fas fa-users text-4xl md:text-6xl text-gris mb-3 md:mb-4"></i>
+                        <p className="text-noir-leger text-sm md:text-lg">Aucun adhérent trouvé</p>
                         <Link
                             to="/adherents/creer"
-                            className="inline-block mt-4 px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors"
+                            className="inline-block mt-3 md:mt-4 px-4 py-1.5 md:px-6 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors text-xs md:text-sm"
                         >
-                            <i className="fas fa-plus mr-2"></i>Ajouter un adhérent
+                            <i className="fas fa-plus mr-1 md:mr-2"></i>Ajouter un adhérent
                         </Link>
                     </div>
                 )}

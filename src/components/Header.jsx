@@ -51,11 +51,17 @@ const Header = ({ onMenuClick }) => {
     return (
         <>
             <header className="bg-white border-b border-gris shadow-sm">
-                <div className="flex items-center justify-between px-4 py-3">
-                    {/* Logo mobile */}
-                    <div className="lg:hidden">
-                        <h1 className="text-xl font-bold text-noir-fonce">
-                            <i className="fas fa-hospital text-jaune mr-2"></i>Mutuelle
+                <div className="flex items-center justify-between px-2 py-2 md:px-4 md:py-3">
+                    {/* Section gauche mobile */}
+                    <div className="lg:hidden flex items-center">
+                        <button
+                            onClick={onMenuClick}
+                            className="text-noir-leger focus:outline-none mr-3"
+                        >
+                            <i className="fas fa-bars text-xl md:text-2xl"></i>
+                        </button>
+                        <h1 className="text-lg md:text-xl font-bold text-noir-fonce">
+                            <i className="fas fa-hospital text-jaune mr-1 md:mr-2 text-base md:text-lg"></i>Mutuelle
                         </h1>
                     </div>
                     
@@ -66,24 +72,16 @@ const Header = ({ onMenuClick }) => {
                         </h1>
                     </div>
 
-                    {/* Bouton menu mobile */}
-                    <button
-                        onClick={onMenuClick}
-                        className="lg:hidden text-noir-leger focus:outline-none"
-                    >
-                        <i className="fas fa-bars text-2xl"></i>
-                    </button>
-
                     {/* Profile dropdown */}
                     <div className="relative" ref={dropdownRef}>
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
-                            className="flex items-center space-x-2 p-2 rounded-full bg-jaune hover:bg-jaune-fonce transition-colors"
+                            className="flex items-center space-x-1 md:space-x-2 p-1.5 md:p-2 rounded-full bg-jaune hover:bg-jaune-fonce transition-colors"
                         >
-                            <div className="w-8 h-8 bg-noir-fonce rounded-full flex items-center justify-center">
-                                <i className="fas fa-user text-jaune text-sm"></i>
+                            <div className="w-7 h-7 md:w-8 md:h-8 bg-noir-fonce rounded-full flex items-center justify-center">
+                                <i className="fas fa-user text-jaune text-xs md:text-sm"></i>
                             </div>
-                            <span className="hidden md:block text-noir-fonce font-medium">
+                            <span className="hidden md:block text-noir-fonce font-medium text-sm md:text-base">
                                 {user?.name}
                             </span>
                             <i className="fas fa-chevron-down text-noir-fonce text-xs"></i>
@@ -119,29 +117,29 @@ const Header = ({ onMenuClick }) => {
 
             {/* Logout Confirmation Modal */}
             {logoutModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded shadow-lg p-6 max-w-md mx-4">
-                        <div className="flex items-center mb-4">
-                            <div className="bg-red-100 p-2 rounded-full mr-3">
-                                <i className="fas fa-exclamation-triangle text-red-600"></i>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3">
+                    <div className="bg-white rounded shadow-lg p-4 md:p-6 max-w-md mx-4">
+                        <div className="flex items-center mb-3 md:mb-4">
+                            <div className="bg-red-100 p-1.5 md:p-2 rounded-full mr-2 md:mr-3">
+                                <i className="fas fa-exclamation-triangle text-red-600 text-sm md:text-base"></i>
                             </div>
-                            <h3 className="text-lg font-semibold text-noir-fonce">
+                            <h3 className="text-base md:text-lg font-semibold text-noir-fonce">
                                 Confirmer la déconnexion
                             </h3>
                         </div>
-                        <p className="text-noir-leger mb-6">
+                        <p className="text-noir-leger mb-4 md:mb-6 text-sm md:text-base">
                             Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder à nouveau à l'application.
                         </p>
-                        <div className="flex justify-end space-x-3">
+                        <div className="flex justify-end space-x-2 md:space-x-3">
                             <button
                                 onClick={() => setLogoutModalOpen(false)}
-                                className="px-4 py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded transition-colors"
+                                className="px-3 py-1.5 md:px-4 md:py-2 border border-gris text-noir-leger hover:bg-gris-clair rounded transition-colors text-xs md:text-sm"
                             >
                                 Annuler
                             </button>
                             <button
                                 onClick={handleLogout}
-                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                                className="px-3 py-1.5 md:px-4 md:py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors text-xs md:text-sm"
                             >
                                 Se déconnecter
                             </button>

@@ -38,18 +38,18 @@ const ActionsList = () => {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 md:space-y-6">
             {/* En-tête */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div className="flex items-center justify-between mb-3 md:mb-6">
                 <div>
-                    <p className="text-noir-leger">{actions.length} action(s) au total</p>
+                    <p className="text-sm md:text-base text-noir-leger">{actions.length} action(s) au total</p>
                 </div>
-                <div className="mt-4 md:mt-0">
+                <div>
                     <Link
                         to="/actions/creer"
-                        className="px-4 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors inline-block"
+                        className="px-3 py-1.5 md:px-4 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors inline-block text-xs md:text-sm"
                     >
-                        <i className="fas fa-plus mr-2"></i>Nouvelle Action
+                        <i className="fas fa-plus mr-1 md:mr-2"></i>Nouvelle Action
                     </Link>
                 </div>
             </div>
@@ -71,7 +71,6 @@ const ActionsList = () => {
                                         <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Date d'Application</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Montant</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Adhérents</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Description</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-noir-leger uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
@@ -103,11 +102,6 @@ const ActionsList = () => {
                                                     {action.adherents?.length || 0} adhérent(s)
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <div className="text-sm text-noir-leger max-w-xs truncate">
-                                                    {action.description || '-'}
-                                                </div>
-                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                 <Link
                                                     to={`/actions/${action.id}`}
@@ -126,39 +120,36 @@ const ActionsList = () => {
                         {/* Vue mobile */}
                         <div className="md:hidden divide-y divide-gris">
                             {actions.map((action) => (
-                                <div key={action.id} className="p-4 hover:bg-jaune-clair transition-colors">
-                                    <div className="flex items-start justify-between mb-3">
+                                <div key={action.id} className="p-2.5 hover:bg-jaune-clair transition-colors">
+                                    <div className="flex items-start justify-between mb-2">
                                         <div className="flex items-center">
-                                            <div className="bg-jaune p-3 rounded-md mr-3">
-                                                <i className="fas fa-bolt text-noir-fonce"></i>
+                                            <div className="bg-jaune p-2 rounded-md mr-2">
+                                                <i className="fas fa-bolt text-noir-fonce text-sm"></i>
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-noir-fonce">{action.type_action}</p>
+                                                <p className="font-semibold text-noir-fonce text-sm">{action.type_action}</p>
                                                 <p className="text-xs text-noir-leger">
                                                     <i className="far fa-calendar-alt mr-1"></i>
                                                     {formatDate(action.date_application)}
                                                 </p>
                                             </div>
                                         </div>
-                                        <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-blue-100 text-blue-800">
+                                        <span className="px-1.5 py-0.5 text-xs font-semibold rounded-sm bg-blue-100 text-blue-800">
                                             <i className="fas fa-users mr-1"></i>
                                             {action.adherents?.length || 0}
                                         </span>
                                     </div>
 
-                                    <div className="mb-3">
-                                        <p className="text-lg font-bold text-noir-fonce">
+                                    <div className="mb-2">
+                                        <p className="text-base font-bold text-noir-fonce">
                                             {formatNumber(action.montant)} FCFA
                                         </p>
-                                        {action.description && (
-                                            <p className="text-sm text-noir-leger mt-1">{action.description}</p>
-                                        )}
                                     </div>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-1.5">
                                         <Link
                                             to={`/actions/${action.id}`}
-                                            className="flex-1 text-center px-3 py-2 bg-jaune text-noir-fonce rounded-md text-sm"
+                                            className="flex-1 text-center px-2 py-1.5 bg-jaune text-noir-fonce rounded-md text-xs"
                                         >
                                             <i className="fas fa-eye mr-1"></i>Voir détails
                                         </Link>
@@ -168,14 +159,14 @@ const ActionsList = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="text-center py-12">
-                        <i className="fas fa-bolt text-6xl text-gris mb-4"></i>
-                        <p className="text-noir-leger text-lg mb-4">Aucune action créée</p>
+                    <div className="text-center py-8 md:py-12">
+                        <i className="fas fa-bolt text-4xl md:text-6xl text-gris mb-3 md:mb-4"></i>
+                        <p className="text-noir-leger text-sm md:text-lg mb-3 md:mb-4">Aucune action créée</p>
                         <Link
                             to="/actions/creer"
-                            className="inline-block px-6 py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors"
+                            className="inline-block px-4 py-1.5 md:px-6 md:py-2 bg-jaune hover:bg-jaune-fonce text-noir-fonce font-semibold rounded-md transition-colors text-xs md:text-sm"
                         >
-                            <i className="fas fa-plus mr-2"></i>Créer une action
+                            <i className="fas fa-plus mr-1 md:mr-2"></i>Créer une action
                         </Link>
                     </div>
                 )}

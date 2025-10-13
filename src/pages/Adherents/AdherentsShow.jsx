@@ -50,14 +50,14 @@ const AdherentsShow = () => {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 md:space-y-6">
             {/* Bouton retour et breadcrumb */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-3 md:mb-6">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center px-4 py-2 text-noir-leger hover:text-jaune hover:bg-jaune-clair rounded transition-colors"
+                    className="flex items-center px-3 py-1.5 md:px-4 md:py-2 text-noir-leger hover:text-jaune hover:bg-jaune-clair rounded transition-colors text-xs md:text-sm"
                 >
-                    <i className="fas fa-arrow-left mr-2"></i>Retour
+                    <i className="fas fa-arrow-left mr-1 md:mr-2"></i>Retour
                 </button>
                 <div className="hidden md:block">
                     <div className="flex items-center text-sm text-noir-leger">
@@ -72,31 +72,31 @@ const AdherentsShow = () => {
 
             {/* Carte d'informations principales */}
             <div className="bg-white rounded shadow overflow-hidden">
-                <div className="bg-gradient-to-r from-noir-fonce to-noir p-6">
-                    <div className="flex items-center">
+                <div className="bg-gradient-to-r from-noir-fonce to-noir p-3 md:p-6">
+                    <div className="flex flex-col md:flex-row items-center md:items-start">
                         {adherent.photo ? (
                             <img
                                 src={adherent.photo}
                                 alt={adherent.nom_complet}
-                                className="w-24 h-24 rounded-full object-cover border-4 border-jaune"
+                                className="w-16 h-16 md:w-24 md:h-24 rounded-full object-cover border-2 md:border-4 border-jaune"
                             />
                         ) : (
-                            <div className="w-24 h-24 bg-jaune rounded-full flex items-center justify-center border-4 border-white">
-                                <span className="text-noir-fonce font-bold text-3xl">
+                            <div className="w-16 h-16 md:w-24 md:h-24 bg-jaune rounded-full flex items-center justify-center border-2 md:border-4 border-white">
+                                <span className="text-noir-fonce font-bold text-lg md:text-3xl">
                                     {adherent.prenom?.charAt(0)}{adherent.nom?.charAt(0)}
                                 </span>
                             </div>
                         )}
-                        <div className="ml-6 text-white">
-                            <h2 className="text-2xl font-bold">{adherent.nom_complet}</h2>
-                            <p className="text-jaune-clair mt-1">{adherent.matricule}</p>
+                        <div className="ml-0 md:ml-6 text-white text-center md:text-left mt-3 md:mt-0">
+                            <h2 className="text-lg md:text-2xl font-bold">{adherent.nom_complet}</h2>
+                            <p className="text-jaune-clair mt-1 text-sm md:text-base">{adherent.matricule}</p>
                             <div className="mt-2">
                                 {adherent.est_actif ? (
-                                    <span className="px-3 py-1 text-sm font-semibold rounded-sm bg-green-500 text-white">
+                                    <span className="px-2 py-1 md:px-3 text-xs md:text-sm font-semibold rounded-sm bg-green-500 text-white">
                                         <i className="fas fa-check-circle mr-1"></i>Actif
                                     </span>
                                 ) : (
-                                    <span className="px-3 py-1 text-sm font-semibold rounded-sm bg-red-500 text-white">
+                                    <span className="px-2 py-1 md:px-3 text-xs md:text-sm font-semibold rounded-sm bg-red-500 text-white">
                                         <i className="fas fa-times-circle mr-1"></i>Inactif
                                     </span>
                                 )}
@@ -106,215 +106,175 @@ const AdherentsShow = () => {
                 </div>
 
                 {/* Informations détaillées */}
-                <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Informations personnelles */}
-                        <div>
-                            <h3 className="text-sm font-semibold text-noir-leger mb-3 uppercase">
-                                <i className="fas fa-user mr-2 text-jaune"></i>Informations Personnelles
+                <div className="p-3 md:p-6 space-y-4 md:space-y-6">
+                    {/* Informations Personnelles */}
+                    <div className="bg-white rounded border border-jaune-clair p-4 md:p-6">
+                        <div className="flex items-center mb-4 md:mb-6">
+                            <div className="bg-jaune p-2 md:p-3 rounded mr-3 md:mr-4">
+                                <i className="fas fa-user text-noir-fonce text-sm md:text-lg"></i>
+                            </div>
+                            <h3 className="text-base md:text-lg font-bold text-noir-fonce">
+                                Informations Personnelles
                             </h3>
-                            <dl className="space-y-2">
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Nom</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.nom}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Prénom</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.prenom}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Situation Matrimoniale</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.situation_matrimoniale}</dd>
-                                </div>
-                            </dl>
                         </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-id-card text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Nom</dt>
+                                </div>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.nom}</dd>
+                            </div>
 
-                        {/* Coordonnées */}
-                        <div>
-                            <h3 className="text-sm font-semibold text-noir-leger mb-3 uppercase">
-                                <i className="fas fa-address-book mr-2 text-jaune"></i>Coordonnées
-                            </h3>
-                            <dl className="space-y-2">
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Email</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.email}</dd>
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-signature text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Prénom</dt>
                                 </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Téléphone</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.numero_telephone}</dd>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.prenom}</dd>
+                            </div>
+
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors sm:col-span-2 lg:col-span-1">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-heart text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Situation Matrimoniale</dt>
                                 </div>
-                            </dl>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.situation_matrimoniale}</dd>
+                            </div>
                         </div>
+                    </div>
 
-                        {/* Informations professionnelles */}
-                        <div>
-                            <h3 className="text-sm font-semibold text-noir-leger mb-3 uppercase">
-                                <i className="fas fa-briefcase mr-2 text-jaune"></i>Informations Professionnelles
+                    {/* Coordonnées */}
+                    <div className="bg-white rounded border border-jaune-clair p-4 md:p-6">
+                        <div className="flex items-center mb-4 md:mb-6">
+                            <div className="bg-jaune p-2 md:p-3 rounded mr-3 md:mr-4">
+                                <i className="fas fa-address-book text-noir-fonce text-sm md:text-lg"></i>
+                            </div>
+                            <h3 className="text-base md:text-lg font-bold text-noir-fonce">
+                                Coordonnées
                             </h3>
-                            <dl className="space-y-2">
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Direction</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.direction}</dd>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-envelope text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Email</dt>
                                 </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Entité</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.entite}</dd>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7 break-all">{adherent.email}</dd>
+                            </div>
+
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-phone text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Téléphone</dt>
                                 </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Grade</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.grade}</dd>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.numero_telephone}</dd>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Informations Professionnelles */}
+                    <div className="bg-white rounded border border-jaune-clair p-4 md:p-6">
+                        <div className="flex items-center mb-4 md:mb-6">
+                            <div className="bg-jaune p-2 md:p-3 rounded mr-3 md:mr-4">
+                                <i className="fas fa-briefcase text-noir-fonce text-sm md:text-lg"></i>
+                            </div>
+                            <h3 className="text-base md:text-lg font-bold text-noir-fonce">
+                                Informations Professionnelles
+                            </h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-building text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Direction</dt>
                                 </div>
-                                <div>
-                                    <dt className="text-xs text-noir-leger">Fonction</dt>
-                                    <dd className="text-sm font-medium text-noir-fonce">{adherent.fonction}</dd>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.direction}</dd>
+                            </div>
+
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-sitemap text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Entité</dt>
                                 </div>
-                            </dl>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.entite}</dd>
+                            </div>
+
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-award text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Grade</dt>
+                                </div>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.grade}</dd>
+                            </div>
+
+                            <div className="bg-gris-clair rounded p-3 md:p-4 border border-gris hover:bg-jaune-clair transition-colors sm:col-span-2 lg:col-span-1 xl:col-span-1">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-user-tie text-jaune mr-2 text-xs md:text-sm"></i>
+                                    <dt className="text-xs md:text-sm font-medium text-noir-leger uppercase tracking-wide">Fonction</dt>
+                                </div>
+                                <dd className="text-sm md:text-base font-semibold text-noir-fonce ml-6 md:ml-7">{adherent.fonction}</dd>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Statistiques financières */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white rounded shadow p-4 border-l-4 border-blue-500">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-noir-leger font-medium">Total Cotisations</p>
-                            <p className="text-3xl font-bold text-noir-fonce mt-2">
-                                {formatNumber(adherent.montant_total_cotisations)} <span className="text-lg">FCFA</span>
-                            </p>
-                        </div>
-                        <div className="bg-blue-100 p-3 rounded-md">
-                            <i className="fas fa-coins text-2xl text-blue-600"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <div className="bg-white rounded shadow p-4 border-l-4 border-purple-500">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-noir-leger font-medium">Total Avantages</p>
-                            <p className="text-3xl font-bold text-noir-fonce mt-2">
-                                {formatNumber(adherent.montant_total_avantages)} <span className="text-lg">FCFA</span>
-                            </p>
-                        </div>
-                        <div className="bg-purple-100 p-3 rounded-md">
-                            <i className="fas fa-gift text-2xl text-purple-600"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Cotisations */}
+            {/* Cotisations Récentes */}
             <div className="bg-white rounded shadow p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-noir-fonce">
-                        <i className="fas fa-money-bill-wave text-jaune mr-2"></i>Cotisations
+                        <i className="fas fa-money-bill-wave text-jaune mr-2"></i>Cotisations Récentes
                     </h2>
                 </div>
 
                 {adherent.cotisations?.length > 0 ? (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gris-clair border-b border-gris">
-                                <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Période</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Montant</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Date de Paiement</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gris">
-                                {adherent.cotisations.map((cotisation) => (
-                                    <tr key={cotisation.id} className="hover:bg-jaune-clair transition-colors">
-                                        <td className="px-4 py-3 text-sm text-noir-fonce">{cotisation.periode}</td>
-                                        <td className="px-4 py-3 text-sm font-semibold text-noir-fonce">
-                                            {formatNumber(cotisation.montant)} FCFA
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-noir-leger">
-                                            {formatDate(cotisation.date_paiement)}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span
-                                                className={`px-2 py-1 text-xs font-semibold rounded-sm ${
-                                                    cotisation.statut === 'Payée'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : cotisation.statut === 'En attente'
-                                                        ? 'bg-yellow-100 text-yellow-800'
-                                                        : 'bg-red-100 text-red-800'
-                                                }`}
-                                            >
-                                                {cotisation.statut}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="space-y-3">
+                        {adherent.cotisations.slice(-5).reverse().map((cotisation) => (
+                            <div
+                                key={cotisation.id}
+                                className="flex items-center justify-between p-4 bg-gris-clair rounded hover:bg-jaune-clair transition-colors"
+                            >
+                                <div className="flex items-center">
+                                    <div className="bg-jaune p-3 rounded mr-4">
+                                        <i className="fas fa-money-bill-wave text-noir-fonce"></i>
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-noir-fonce">{cotisation.periode}</p>
+                                        <p className="text-sm text-noir-leger">
+                                            {formatDate(cotisation.date_paiement || cotisation.created_at)}
+                                        </p>
+                                        {cotisation.description && (
+                                            <p className="text-xs text-noir-leger mt-1">{cotisation.description}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-bold text-noir-fonce">{formatNumber(cotisation.montant)} FCFA</p>
+                                    <span
+                                        className={`text-xs px-2 py-1 font-semibold rounded-sm ${
+                                            cotisation.statut === 'Payée'
+                                                ? 'bg-green-100 text-green-800'
+                                                : cotisation.statut === 'En attente'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-red-100 text-red-800'
+                                        }`}
+                                    >
+                                        {cotisation.statut || 'Payée'}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : (
                     <p className="text-center text-noir-leger py-8">
                         <i className="fas fa-inbox text-4xl mb-2"></i>
                         <br />
                         Aucune cotisation enregistrée
-                    </p>
-                )}
-            </div>
-
-            {/* Avantages */}
-            <div className="bg-white rounded shadow p-4">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-noir-fonce">
-                        <i className="fas fa-gift text-jaune mr-2"></i>Avantages
-                    </h2>
-                </div>
-
-                {adherent.avantages?.length > 0 ? (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gris-clair border-b border-gris">
-                                <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Type</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Montant</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Date d'Attribution</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Statut</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-noir-leger uppercase">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gris">
-                                {adherent.avantages.map((avantage) => (
-                                    <tr key={avantage.id} className="hover:bg-jaune-clair transition-colors">
-                                        <td className="px-4 py-3 text-sm text-noir-fonce">{avantage.type_avantage}</td>
-                                        <td className="px-4 py-3 text-sm font-semibold text-noir-fonce">
-                                            {formatNumber(avantage.montant)} FCFA
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-noir-leger">
-                                            {formatDate(avantage.date_attribution)}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span
-                                                className={`px-2 py-1 text-xs font-semibold rounded-sm ${
-                                                    avantage.statut === 'Accordé'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : avantage.statut === 'En cours'
-                                                        ? 'bg-yellow-100 text-yellow-800'
-                                                        : 'bg-red-100 text-red-800'
-                                                }`}
-                                            >
-                                                {avantage.statut}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-noir-leger">{avantage.description || '-'}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                ) : (
-                    <p className="text-center text-noir-leger py-8">
-                        <i className="fas fa-inbox text-4xl mb-2"></i>
-                        <br />
-                        Aucun avantage enregistré
                     </p>
                 )}
             </div>
@@ -332,10 +292,10 @@ const AdherentsShow = () => {
                         {adherent.actions.map((action) => (
                             <div
                                 key={action.id}
-                                className="flex items-center justify-between p-4 bg-gris-clair rounded-md hover:bg-jaune-clair transition-colors"
+                                className="flex items-center justify-between p-4 bg-gris-clair rounded hover:bg-jaune-clair transition-colors"
                             >
                                 <div className="flex items-center">
-                                    <div className="bg-jaune p-3 rounded-md mr-4">
+                                    <div className="bg-jaune p-3 rounded mr-4">
                                         <i className="fas fa-bolt text-noir-fonce"></i>
                                     </div>
                                     <div>
@@ -343,9 +303,6 @@ const AdherentsShow = () => {
                                         <p className="text-sm text-noir-leger">
                                             {formatDate(action.date_application)}
                                         </p>
-                                        {action.description && (
-                                            <p className="text-xs text-noir-leger mt-1">{action.description}</p>
-                                        )}
                                     </div>
                                 </div>
                                 <div className="text-right">
