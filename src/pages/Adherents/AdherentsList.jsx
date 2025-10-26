@@ -1,6 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
+
+// Fake data - stockées dans localStorage
+const initializeFakeData = () => {
+    if (!localStorage.getItem('fake_adherents')) {
+        const fakeAdherents = [
+            {
+                id: 1,
+                nom: 'DIOP',
+                prenom: 'Amadou',
+                nom_complet: 'Amadou DIOP',
+                matricule: 'MAT001',
+                email: 'amadou.diop@mutuelle.com',
+                numero_telephone: '+221 77 123 45 67',
+                direction: 'Direction Générale',
+                entite: 'Département IT',
+                grade: 'Cadre Supérieur',
+                fonction: 'Directeur IT',
+                situation_matrimoniale: 'Marié(e)',
+                est_actif: true,
+                photo: null,
+                created_at: '2024-01-15'
+            },
+            {
+                id: 2,
+                nom: 'NDIAYE',
+                prenom: 'Fatou',
+                nom_complet: 'Fatou NDIAYE',
+                matricule: 'MAT002',
+                email: 'fatou.ndiaye@mutuelle.com',
+                numero_telephone: '+221 77 234 56 78',
+                direction: 'Ressources Humaines',
+                entite: 'Service RH',
+                grade: 'Cadre',
+                fonction: 'Chef de Service',
+                situation_matrimoniale: 'Célibataire',
+                est_actif: true,
+                photo: null,
+                created_at: '2024-02-10'
+            },
+            {
+                id: 3,
+                nom: 'FALL',
+                prenom: 'Moussa',
+                nom_complet: 'Moussa FALL',
+                matricule: 'MAT003',
+                email: 'moussa.fall@mutuelle.com',
+                numero_telephone: '+221 77 345 67 89',
+                direction: 'Direction Financière',
+                entite: 'Comptabilité',
+                grade: 'Cadre Moyen',
+                fonction: 'Comptable',
+                situation_matrimoniale: 'Marié(e)',
+                est_actif: true,
+                photo: null,
+                created_at: '2024-03-05'
+            }
+        ];
+        localStorage.setItem('fake_adherents', JSON.stringify(fakeAdherents));
+    }
+};
+
+initializeFakeData();
 
 const AdherentsList = () => {
     const [adherents, setAdherents] = useState([]);
@@ -21,12 +82,46 @@ const AdherentsList = () => {
         fetchAdherents();
     }, []);
 
+    // Fonction simple pour récupérer les adhérents
     const fetchAdherents = async () => {
         try {
             setLoading(true);
-            const data = await apiAdapter.getAdherents(filters);
-            setAdherents(data.data || []);
-            setDirections(data.directions || []);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const data = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            
+            // Appliquer les filtres
+            let filtered = [...data];
+            
+            if (filters.recherche) {
+                const search = filters.recherche.toLowerCase();
+                filtered = filtered.filter(a => 
+                    a.nom.toLowerCase().includes(search) ||
+                    a.prenom.toLowerCase().includes(search) ||
+                    a.matricule.toLowerCase().includes(search) ||
+                    a.email.toLowerCase().includes(search)
+                );
+            }
+            
+            if (filters.statut) {
+                filtered = filtered.filter(a => 
+                    filters.statut === 'actif' ? a.est_actif : !a.est_actif
+                );
+            }
+            
+            if (filters.direction) {
+                filtered = filtered.filter(a => a.direction === filters.direction);
+            }
+            
+            if (filters.situation_matrimoniale) {
+                filtered = filtered.filter(a => a.situation_matrimoniale === filters.situation_matrimoniale);
+            }
+            
+            setAdherents(filtered);
+            
+            // Extraire les directions uniques
+            const allDirections = [...new Set(data.map(a => a.direction))];
+            setDirections(allDirections);
         } catch (error) {
             console.error('Erreur lors du chargement des adhérents:', error);
         } finally {
@@ -64,6 +159,7 @@ const AdherentsList = () => {
         }, 0);
     };
 
+    // Fonction simple pour supprimer un adhérent
     const handleDelete = async (id) => {
         if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet adhérent ?')) {
             return;
@@ -71,8 +167,13 @@ const AdherentsList = () => {
 
         try {
             setDeletingId(id);
-            await apiAdapter.deleteAdherent(id);
-            fetchAdherents();
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const data = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            const filtered = data.filter(a => a.id !== id);
+            localStorage.setItem('fake_adherents', JSON.stringify(filtered));
+            
+            await fetchAdherents();
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             alert('Une erreur est survenue lors de la suppression');
@@ -81,10 +182,44 @@ const AdherentsList = () => {
         }
     };
 
+    // Fonction simple pour exporter les adhérents en CSV
     const handleExport = async () => {
         try {
             setExporting(true);
-            await apiAdapter.exportAdherents();
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const data = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            
+            // Créer CSV
+            const headers = ['Matricule', 'Nom', 'Prénom', 'Email', 'Téléphone', 'Direction', 'Entité', 'Grade', 'Fonction', 'Situation Matrimoniale', 'Statut'];
+            const rows = data.map(a => [
+                a.matricule,
+                a.nom,
+                a.prenom,
+                a.email,
+                a.numero_telephone,
+                a.direction,
+                a.entite,
+                a.grade,
+                a.fonction,
+                a.situation_matrimoniale,
+                a.est_actif ? 'Actif' : 'Inactif'
+            ]);
+
+            const csvContent = [headers, ...rows]
+                .map(row => row.map(cell => `"${cell}"`).join(','))
+                .join('\n');
+
+            // Télécharger le fichier
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `adherents_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Erreur lors de l\'export:', error);
         } finally {

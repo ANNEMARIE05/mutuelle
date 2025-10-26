@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 
 const Header = ({ onMenuClick }) => {
-    const { user, logout } = useAuth();
+    const [user, setUser] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -11,6 +10,12 @@ const Header = ({ onMenuClick }) => {
     const location = useLocation();
 
     useEffect(() => {
+        // Récupérer les informations utilisateur
+        const userData = localStorage.getItem('auth_user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setDropdownOpen(false);
@@ -21,8 +26,12 @@ const Header = ({ onMenuClick }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleLogout = async () => {
-        await logout();
+    const handleLogout = () => {
+        // Supprimer les données d'authentification
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
+        localStorage.removeItem('remember_me');
+        
         setLogoutModalOpen(false);
         navigate('/connexion');
     };
@@ -38,10 +47,10 @@ const Header = ({ onMenuClick }) => {
             if (path.includes('/modifier')) return 'Modifier Adhérent';
             return 'Détails Adhérent';
         }
-        if (path.startsWith('/actions')) {
-            if (path === '/actions') return 'Liste des Actions';
-            if (path.includes('/creer')) return 'Nouvelle Action';
-            return 'Détails Action';
+        if (path.startsWith('/prestations')) {
+            if (path === '/prestations') return 'Liste des Prestations';
+            if (path.includes('/creer')) return 'Nouvelle Prestation';
+            return 'Détails Prestation';
         }
         if (path === '/profile') return 'Mon Profil';
         

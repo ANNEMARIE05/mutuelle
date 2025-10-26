@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const AdherentsEdit = () => {
     const { id } = useParams();
@@ -26,10 +25,20 @@ const AdherentsEdit = () => {
         fetchAdherent();
     }, [id]);
 
+    // Fonction simple pour récupérer un adhérent avec fake data
     const fetchAdherent = async () => {
         try {
-            const data = await apiAdapter.getAdherent(id);
-            const { photo, cotisations, avantages, actions, montant_total_cotisations, montant_total_avantages, created_at, ...rest } = data;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            const adherent = adherents.find(a => a.id === parseInt(id));
+            
+            if (!adherent) {
+                navigate('/adherents');
+                return;
+            }
+
+            const { photo, cotisations, avantages, prestations, montant_total_cotisations, montant_total_avantages, created_at, ...rest } = adherent;
             setFormData(rest);
         } catch (error) {
             console.error('Erreur lors du chargement de l\'adhérent:', error);
@@ -50,20 +59,36 @@ const AdherentsEdit = () => {
         }
     };
 
+    // Fonction simple pour modifier un adhérent avec fake data
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
         setErrors({});
 
         try {
-            await apiAdapter.updateAdherent(id, formData);
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation délai
+            
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            const index = adherents.findIndex(a => a.id === parseInt(id));
+            
+            if (index === -1) {
+                navigate('/adherents');
+                return;
+            }
+
+            // Mettre à jour l'adhérent
+            adherents[index] = {
+                ...adherents[index],
+                ...formData,
+                nom_complet: `${formData.prenom} ${formData.nom}`
+            };
+
+            localStorage.setItem('fake_adherents', JSON.stringify(adherents));
+
             navigate(`/adherents/${id}`);
         } catch (error) {
-            if (error.response?.data?.errors) {
-                setErrors(error.response.data.errors);
-            } else {
-                alert('Une erreur est survenue lors de la mise à jour');
-            }
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de la mise à jour');
         } finally {
             setSaving(false);
         }

@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
-const ActionsShow = () => {
+const PrestationsShow = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [action, setAction] = useState(null);
+    const [prestation, setPrestation] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchAction();
+        fetchPrestation();
     }, [id]);
 
-    const fetchAction = async () => {
+    // Fonction simple pour récupérer une prestation avec fake data
+    const fetchPrestation = async () => {
         try {
-            const data = await apiAdapter.getAction(id);
-            setAction(data);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const prestations = JSON.parse(localStorage.getItem('fake_prestations') || '[]');
+            const prestation = prestations.find(p => p.id === parseInt(id));
+            
+            if (!prestation) {
+                navigate('/prestations');
+                return;
+            }
+
+            // Récupérer les données complètes des adhérents
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            const adherentsData = adherents.filter(a => prestation.adherents.includes(a.id));
+            
+            setPrestation({
+                ...prestation,
+                adherents: adherentsData
+            });
         } catch (error) {
-            console.error('Erreur lors du chargement de l\'action:', error);
-            navigate('/actions');
+            console.error('Erreur lors du chargement de la prestation:', error);
+            navigate('/prestations');
         } finally {
             setLoading(false);
         }
@@ -40,11 +56,11 @@ const ActionsShow = () => {
         );
     }
 
-    if (!action) {
+    if (!prestation) {
         return (
             <div className="text-center py-12">
                 <i className="fas fa-exclamation-triangle text-6xl text-gris mb-4"></i>
-                <p className="text-noir-leger text-lg">Action non trouvée</p>
+                <p className="text-noir-leger text-lg">Prestation non trouvée</p>
             </div>
         );
     }
@@ -61,11 +77,11 @@ const ActionsShow = () => {
                 </button>
                 <div className="hidden md:block">
                     <div className="flex items-center text-sm text-noir-leger">
-                        <Link to="/actions" className="hover:text-jaune">
-                            <i className="fas fa-bolt mr-2"></i>Actions
+                        <Link to="/prestations" className="hover:text-jaune">
+                            <i className="fas fa-bolt mr-2"></i>Prestations
                         </Link>
                         <i className="fas fa-chevron-right mx-2"></i>
-                        <span className="text-noir">{action.type_action}</span>
+                        <span className="text-noir">{prestation.type_prestation}</span>
                     </div>
                 </div>
             </div>
@@ -78,25 +94,25 @@ const ActionsShow = () => {
                             <i className="fas fa-bolt text-xl md:text-2xl text-noir-fonce"></i>
                         </div>
                         <div className="text-center md:text-left">
-                            <h1 className="text-lg md:text-2xl font-bold text-noir-fonce mb-2">{action.type_action}</h1>
+                            <h1 className="text-lg md:text-2xl font-bold text-noir-fonce mb-2">{prestation.type_prestation}</h1>
                             <div className="bg-gris-clair p-2 rounded mb-2">
                                 <p className="text-xs text-noir-leger mb-1">
                                     <i className="far fa-calendar-alt mr-1 text-jaune"></i>
                                     Date d'application
                                 </p>
-                                <p className="text-sm font-semibold text-noir-fonce">{formatDate(action.date_application)}</p>
+                                <p className="text-sm font-semibold text-noir-fonce">{formatDate(prestation.date_application)}</p>
                             </div>
                         </div>
                     </div>
                     <div className="text-center lg:text-right mt-3 lg:mt-0">
                         <div className="bg-jaune p-3 rounded">
                             <p className="text-xs text-noir-leger mb-1">Montant</p>
-                            <p className="text-xl md:text-2xl font-bold text-noir-fonce">{formatNumber(action.montant)} FCFA</p>
+                            <p className="text-xl md:text-2xl font-bold text-noir-fonce">{formatNumber(prestation.montant)} FCFA</p>
                         </div>
                         <div className="mt-2 bg-green-50 p-2 rounded">
                             <p className="text-xs text-green-800 font-medium">
                                 <i className="fas fa-users mr-1"></i>
-                                {action.adherents?.length || 0} adhérent(s) concerné(s)
+                                {prestation.adherents?.length || 0} adhérent(s) concerné(s)
                             </p>
                         </div>
                     </div>
@@ -109,9 +125,9 @@ const ActionsShow = () => {
                     <i className="fas fa-users mr-1 md:mr-2"></i>Adhérents Concernés
                 </h2>
 
-                {action.adherents && action.adherents.length > 0 ? (
+                {prestation.adherents && prestation.adherents.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
-                        {action.adherents.map((adherent) => (
+                        {prestation.adherents.map((adherent) => (
                             <div
                                 key={adherent.id}
                                 className="border border-gris rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow"
@@ -191,4 +207,4 @@ const ActionsShow = () => {
     );
 };
 
-export default ActionsShow;
+export default PrestationsShow;

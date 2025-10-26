@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const AdherentsShow = () => {
     const { id } = useParams();
@@ -12,10 +11,32 @@ const AdherentsShow = () => {
         fetchAdherent();
     }, [id]);
 
+    // Fonction simple pour récupérer un adhérent avec fake data
     const fetchAdherent = async () => {
         try {
-            const data = await apiAdapter.getAdherent(id);
-            setAdherent(data);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            const adherent = adherents.find(a => a.id === parseInt(id));
+            
+            if (!adherent) {
+                navigate('/adherents');
+                return;
+            }
+
+            // Récupérer les prestations liées à cet adhérent
+            const prestations = JSON.parse(localStorage.getItem('fake_prestations') || '[]');
+            const adherentPrestations = prestations.filter(p => p.adherents.includes(adherent.id));
+            
+            // Ajouter des données mock pour cotisations, avantages, etc.
+            const adherentWithExtra = {
+                ...adherent,
+                cotisations: [],
+                avantages: [],
+                prestations: adherentPrestations
+            };
+
+            setAdherent(adherentWithExtra);
         } catch (error) {
             console.error('Erreur lors du chargement de l\'adhérent:', error);
             navigate('/adherents');
@@ -279,19 +300,19 @@ const AdherentsShow = () => {
                 )}
             </div>
 
-            {/* Actions appliquées */}
+            {/* Prestations appliquées */}
             <div className="bg-white rounded shadow p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-noir-fonce">
-                        <i className="fas fa-bolt text-jaune mr-2"></i>Actions Appliquées
+                        <i className="fas fa-bolt text-jaune mr-2"></i>Prestations Appliquées
                     </h2>
                 </div>
 
-                {adherent.actions?.length > 0 ? (
+                {adherent.prestations?.length > 0 ? (
                     <div className="space-y-3">
-                        {adherent.actions.map((action) => (
+                        {adherent.prestations.map((prestation) => (
                             <div
-                                key={action.id}
+                                key={prestation.id}
                                 className="flex items-center justify-between p-4 bg-gris-clair rounded hover:bg-jaune-clair transition-colors"
                             >
                                 <div className="flex items-center">
@@ -299,14 +320,14 @@ const AdherentsShow = () => {
                                         <i className="fas fa-bolt text-noir-fonce"></i>
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-noir-fonce">{action.type_action}</p>
+                                        <p className="font-semibold text-noir-fonce">{prestation.type_prestation}</p>
                                         <p className="text-sm text-noir-leger">
-                                            {formatDate(action.date_application)}
+                                            {formatDate(prestation.date_application)}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-bold text-noir-fonce">{formatNumber(action.montant)} FCFA</p>
+                                    <p className="font-bold text-noir-fonce">{formatNumber(prestation.montant)} FCFA</p>
                                     <span className="px-2 py-1 text-xs font-semibold rounded-sm bg-green-100 text-green-800">
                                         Appliquée
                                     </span>
@@ -318,7 +339,7 @@ const AdherentsShow = () => {
                     <p className="text-center text-noir-leger py-8">
                         <i className="fas fa-inbox text-4xl mb-2"></i>
                         <br />
-                        Aucune action appliquée
+                        Aucune prestation appliquée
                     </p>
                 )}
             </div>

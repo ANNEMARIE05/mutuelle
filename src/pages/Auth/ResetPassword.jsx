@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -34,11 +33,24 @@ const ResetPassword = () => {
         }
         setLoading(true);
         try {
-            await apiAdapter.resetPassword(email, code, password);
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Vérifier que le code est toujours valide
+            const storedOtp = JSON.parse(localStorage.getItem('fake_otp') || '{}');
+            if (!storedOtp.code || storedOtp.email !== email || storedOtp.code !== code) {
+                throw new Error('Code invalide ou expiré.');
+            }
+            
+            // Simuler la réinitialisation du mot de passe
             setInfo('Mot de passe réinitialisé. Redirection...');
+            
+            // Nettoyer le code OTP
+            localStorage.removeItem('fake_otp');
+            
             setTimeout(() => navigate('/connexion'), 1500);
         } catch (err) {
-            setError(err.response?.data?.message || 'Impossible de réinitialiser le mot de passe.');
+            setError(err.message || 'Impossible de réinitialiser le mot de passe.');
         } finally {
             setLoading(false);
         }

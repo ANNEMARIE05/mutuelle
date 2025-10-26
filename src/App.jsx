@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
 import Login from './pages/Auth/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import OtpVerify from './pages/Auth/OtpVerify';
@@ -10,16 +9,32 @@ import AdherentsList from './pages/Adherents/AdherentsList';
 import AdherentsCreate from './pages/Adherents/AdherentsCreate';
 import AdherentsShow from './pages/Adherents/AdherentsShow';
 import AdherentsEdit from './pages/Adherents/AdherentsEdit';
-import ActionsList from './pages/Actions/ActionsList';
-import ActionsCreate from './pages/Actions/ActionsCreate';
-import ActionsShow from './pages/Actions/ActionsShow';
+import PrestationsList from './pages/Prestations/PrestationsList';
+import PrestationsCreate from './pages/Prestations/PrestationsCreate';
+import PrestationsShow from './pages/Prestations/PrestationsShow';
 import Profile from './pages/Profile';
 import Layout from './components/Layout';
 
+// Fonction simple pour vérifier l'authentification
+const isAuthenticated = () => {
+    const token = localStorage.getItem('auth_token');
+    const user = localStorage.getItem('auth_user');
+    return !!(token && user);
+};
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    
+    const [loading, setLoading] = useState(true);
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const checkAuth = () => {
+            setAuthenticated(isAuthenticated());
+            setLoading(false);
+        };
+        checkAuth();
+    }, []);
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gris-clair">
@@ -31,13 +46,22 @@ const ProtectedRoute = ({ children }) => {
         );
     }
     
-    return user ? children : <Navigate to="/connexion" replace />;
+    return authenticated ? children : <Navigate to="/connexion" replace />;
 };
 
 // Guest Route Component (pour les routes comme login)
 const GuestRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    
+    const [loading, setLoading] = useState(true);
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const checkAuth = () => {
+            setAuthenticated(isAuthenticated());
+            setLoading(false);
+        };
+        checkAuth();
+    }, []);
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gris-clair">
@@ -49,7 +73,7 @@ const GuestRoute = ({ children }) => {
         );
     }
     
-    return user ? <Navigate to="/dashboard" replace /> : children;
+    return authenticated ? <Navigate to="/dashboard" replace /> : children;
 };
 
 function App() {
@@ -146,33 +170,33 @@ function App() {
             />
             
             <Route
-                path="/actions"
+                path="/prestations"
                 element={
                     <ProtectedRoute>
                         <Layout>
-                            <ActionsList />
+                            <PrestationsList />
                         </Layout>
                     </ProtectedRoute>
                 }
             />
             
             <Route
-                path="/actions/creer"
+                path="/prestations/creer"
                 element={
                     <ProtectedRoute>
                         <Layout>
-                            <ActionsCreate />
+                            <PrestationsCreate />
                         </Layout>
                     </ProtectedRoute>
                 }
             />
             
             <Route
-                path="/actions/:id"
+                path="/prestations/:id"
                 element={
                     <ProtectedRoute>
                         <Layout>
-                            <ActionsShow />
+                            <PrestationsShow />
                         </Layout>
                     </ProtectedRoute>
                 }
@@ -191,7 +215,7 @@ function App() {
             
             {/* Redirection par défaut */}
             <Route path="/" element={<Navigate to="/connexion" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/connexion" replace />} />
         </Routes>
     );
 }

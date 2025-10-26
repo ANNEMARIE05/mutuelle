@@ -14,7 +14,7 @@ const Sidebar = ({ mobile = false, onClose, collapsed = false, onToggle }) => {
     const menuItems = [
         { path: '/dashboard', icon: 'fa-chart-line', label: 'Dashboard' },
         { path: '/adherents', icon: 'fa-users', label: 'Adhérents' },
-        { path: '/actions', icon: 'fa-bolt', label: 'Actions' },
+        { path: '/prestations', icon: 'fa-bolt', label: 'Prestations' },
     ];
 
     return (

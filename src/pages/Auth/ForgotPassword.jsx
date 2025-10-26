@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -15,11 +14,23 @@ const ForgotPassword = () => {
         setInfo('');
         setLoading(true);
         try {
-            const res = await apiAdapter.sendOtp(email);
-            // Pass email (and code for dev) to next screen via state
-            navigate('/verification-otp', { state: { email, devCode: res.code } });
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Générer un code OTP fake
+            const code = String(Math.floor(100000 + Math.random() * 900000));
+            
+            // Stocker dans localStorage
+            const otpData = {
+                email,
+                code,
+                expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
+            };
+            localStorage.setItem('fake_otp', JSON.stringify(otpData));
+            
+            navigate('/verification-otp', { state: { email, devCode: code } });
         } catch (err) {
-            setError(err.response?.data?.message || 'Impossible d\'envoyer le code.');
+            setError(err.message || 'Impossible d\'envoyer le code.');
         } finally {
             setLoading(false);
         }

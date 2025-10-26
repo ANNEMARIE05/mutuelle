@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const AdherentsCreate = () => {
     const navigate = useNavigate();
@@ -31,20 +30,41 @@ const AdherentsCreate = () => {
         }
     };
 
+    // Fonction simple pour créer un adhérent avec fake data
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setErrors({});
 
         try {
-            await apiAdapter.createAdherent(formData);
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Récupérer les adhérents existants
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            
+            // Générer un nouvel ID
+            const newId = adherents.length > 0 ? Math.max(...adherents.map(a => a.id)) + 1 : 1;
+            
+            // Créer le nouvel adhérent
+            const newAdherent = {
+                ...formData,
+                id: newId,
+                nom_complet: `${formData.prenom} ${formData.nom}`,
+                est_actif: true,
+                montant_total_cotisations: 0,
+                montant_total_avantages: 0,
+                created_at: new Date().toISOString().split('T')[0]
+            };
+
+            // Ajouter au localStorage
+            adherents.push(newAdherent);
+            localStorage.setItem('fake_adherents', JSON.stringify(adherents));
+
             navigate('/adherents');
         } catch (error) {
-            if (error.response?.data?.errors) {
-                setErrors(error.response.data.errors);
-            } else {
-                alert('Une erreur est survenue lors de l\'enregistrement');
-            }
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de l\'enregistrement');
         } finally {
             setLoading(false);
         }

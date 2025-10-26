@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
 const OtpVerify = () => {
     const navigate = useNavigate();
@@ -24,10 +23,27 @@ const OtpVerify = () => {
         setInfo('');
         setLoading(true);
         try {
-            await apiAdapter.verifyOtp(email, code);
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Vérifier le code OTP depuis localStorage
+            const storedOtp = JSON.parse(localStorage.getItem('fake_otp') || '{}');
+            
+            if (!storedOtp.code || storedOtp.email !== email) {
+                throw new Error('Code invalide.');
+            }
+            
+            if (Date.now() > storedOtp.expiresAt) {
+                throw new Error('Code expiré.');
+            }
+            
+            if (storedOtp.code !== code) {
+                throw new Error('Code invalide.');
+            }
+
             navigate('/reinitialiser-mot-de-passe', { state: { email, code } });
         } catch (err) {
-            setError(err.response?.data?.message || 'Code invalide.');
+            setError(err.message || 'Code invalide.');
         } finally {
             setLoading(false);
         }
@@ -39,8 +55,21 @@ const OtpVerify = () => {
         setInfo('');
         setLoading(true);
         try {
-            const res = await apiAdapter.sendOtp(email);
-            setInfo('Nouveau code envoyé.');
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Régénérer un nouveau code OTP
+            const code = String(Math.floor(100000 + Math.random() * 900000));
+            
+            // Stocker dans localStorage
+            const otpData = {
+                email,
+                code,
+                expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
+            };
+            localStorage.setItem('fake_otp', JSON.stringify(otpData));
+
+            setInfo('Nouveau code envoyé. Code (dev): ' + code);
         } catch (err) {
             setError('Réenvoi impossible pour le moment.');
         } finally {

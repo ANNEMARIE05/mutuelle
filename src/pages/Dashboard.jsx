@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import apiAdapter from '../services/apiAdapter';
 
 const Dashboard = () => {
-    const { user } = useAuth();
+    const [user, setUser] = useState(null);
     const [statistiques, setStatistiques] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
     useEffect(() => {
+        // Récupérer les informations utilisateur
+        const userData = localStorage.getItem('auth_user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+        
         fetchStatistiques();
         
         // Afficher la popup de bienvenue
@@ -22,10 +26,28 @@ const Dashboard = () => {
         }
     }, []);
 
+    // Fonction simple pour récupérer les statistiques avec fake data
     const fetchStatistiques = async () => {
         try {
-            const data = await apiAdapter.getDashboard();
-            setStatistiques(data);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const adherents = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            
+            // Récupérer les prestations pour les statistiques
+            const prestations = JSON.parse(localStorage.getItem('fake_prestations') || '[]');
+            
+            // Créer des statistiques fake
+            const stats = {
+                total_adherents: adherents.length,
+                adherents_actifs: adherents.filter(a => a.est_actif).length,
+                total_cotisations: 5000000,
+                total_avantages: 2000000,
+                cotisations_recentes: [],
+                adherents_recents: adherents.slice(-5).reverse(),
+                prestations_recentes: prestations.slice(-5).reverse()
+            };
+            
+            setStatistiques(stats);
         } catch (error) {
             console.error('Erreur lors du chargement des statistiques:', error);
         } finally {
@@ -156,15 +178,15 @@ const Dashboard = () => {
                     </Link>
 
                     <Link
-                        to="/actions/creer"
+                        to="/prestations/creer"
                         className="flex items-center p-2 md:p-3 border-2 border-gris rounded hover:border-jaune hover:bg-jaune-clair transition-all"
                     >
                         <div className="bg-jaune p-1.5 md:p-2 rounded mr-2 md:mr-3">
                             <i className="fas fa-plus-circle text-noir-fonce text-sm md:text-base"></i>
                         </div>
                         <div>
-                            <p className="font-semibold text-noir-fonce text-sm md:text-base">Nouvelle Action</p>
-                            <p className="text-xs md:text-sm text-noir-leger">Créer une action</p>
+                            <p className="font-semibold text-noir-fonce text-sm md:text-base">Nouvelle Prestation</p>
+                            <p className="text-xs md:text-sm text-noir-leger">Créer une prestation</p>
                         </div>
                     </Link>
                 </div>
@@ -304,8 +326,8 @@ const Dashboard = () => {
                                 <div className="flex items-center p-2 md:p-3 bg-green-50 rounded-lg">
                                     <i className="fas fa-bolt text-green-600 mr-2 md:mr-3 text-lg md:text-xl"></i>
                                     <div>
-                                        <p className="text-xs md:text-sm font-semibold text-noir-fonce">Actions & Événements</p>
-                                        <p className="text-xs text-noir-leger">Créez et suivez vos actions</p>
+                                        <p className="text-xs md:text-sm font-semibold text-noir-fonce">Prestations & Événements</p>
+                                        <p className="text-xs text-noir-leger">Créez et suivez vos prestations</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center p-2 md:p-3 bg-blue-50 rounded-lg">

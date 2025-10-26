@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import apiAdapter from '../services/apiAdapter';
+import React, { useState, useEffect } from 'react';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [passwords, setPasswords] = useState({
@@ -11,6 +9,14 @@ const Profile = () => {
         password: '',
         password_confirmation: ''
     });
+
+    useEffect(() => {
+        // Récupérer les informations utilisateur
+        const userData = localStorage.getItem('auth_user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+    }, []);
 
     const handlePasswordChange = (e) => {
         setPasswords({
@@ -38,7 +44,10 @@ const Profile = () => {
         }
 
         try {
-            await apiAdapter.updatePassword(passwords);
+            // Simulation délai
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simuler la mise à jour du mot de passe
             setMessage({ type: 'success', text: 'Mot de passe modifié avec succès!' });
             setPasswords({
                 current_password: '',

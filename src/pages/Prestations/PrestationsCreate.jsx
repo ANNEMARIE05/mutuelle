@@ -1,8 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import apiAdapter from '../../services/apiAdapter';
 
-const ActionsCreate = () => {
+// Fake data pour les prestations
+const initializeFakePrestations = () => {
+    if (!localStorage.getItem('fake_prestations')) {
+        const fakePrestations = [
+            {
+                id: 1,
+                type_prestation: 'Prime de naissance',
+                date_application: '2024-01-15',
+                montant: 50000,
+                adherents: [1, 2, 3],
+                description: 'Prime accordée à la naissance d\'un enfant',
+                statut: 'active'
+            },
+            {
+                id: 2,
+                type_prestation: 'Aide scolaire',
+                date_application: '2024-02-01',
+                montant: 25000,
+                adherents: [1, 2],
+                description: 'Aide pour les frais de scolarité des enfants',
+                statut: 'active'
+            },
+            {
+                id: 3,
+                type_prestation: 'Prime de mariage',
+                date_application: '2024-03-10',
+                montant: 75000,
+                adherents: [2, 3],
+                description: 'Prime accordée lors du mariage d\'un adhérent',
+                statut: 'active'
+            }
+        ];
+        localStorage.setItem('fake_prestations', JSON.stringify(fakePrestations));
+    }
+};
+
+initializeFakePrestations();
+
+const PrestationsCreate = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -13,7 +50,7 @@ const ActionsCreate = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAdherents, setSelectedAdherents] = useState([]);
     const [formData, setFormData] = useState({
-        type_action: '',
+        type_prestation: '',
         montant: '',
         date_application: new Date().toISOString().split('T')[0],
     });
@@ -22,10 +59,13 @@ const ActionsCreate = () => {
         fetchAdherents();
     }, []);
 
+    // Fonction simple pour récupérer les adhérents avec fake data
     const fetchAdherents = async () => {
         try {
-            const data = await apiAdapter.getAdherents({ per_page: 1000 });
-            setAdherents(data.data || []);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation délai
+            
+            const data = JSON.parse(localStorage.getItem('fake_adherents') || '[]');
+            setAdherents(data);
         } catch (error) {
             console.error('Erreur lors du chargement des adhérents:', error);
         } finally {
@@ -67,6 +107,7 @@ const ActionsCreate = () => {
         setDeselectingAll(false);
     };
 
+    // Fonction simple pour créer une prestation avec fake data
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -79,17 +120,30 @@ const ActionsCreate = () => {
         }
 
         try {
-            await apiAdapter.createAction({
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation délai
+            
+            // Récupérer les prestations existantes
+            const prestations = JSON.parse(localStorage.getItem('fake_prestations') || '[]');
+            
+            // Générer un nouvel ID
+            const newId = prestations.length > 0 ? Math.max(...prestations.map(p => p.id)) + 1 : 1;
+            
+            // Créer la nouvelle prestation
+            const newPrestation = {
                 ...formData,
-                adherents: selectedAdherents
-            });
-            navigate('/actions');
+                id: newId,
+                adherents: selectedAdherents, // Stocker seulement les IDs
+                created_at: new Date().toISOString().split('T')[0]
+            };
+
+            // Ajouter au localStorage
+            prestations.push(newPrestation);
+            localStorage.setItem('fake_prestations', JSON.stringify(prestations));
+
+            navigate('/prestations');
         } catch (error) {
-            if (error.response?.data?.errors) {
-                setErrors(error.response.data.errors);
-            } else {
-                alert('Une erreur est survenue lors de la création de l\'action');
-            }
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de la création de la prestation');
         } finally {
             setSaving(false);
         }
@@ -115,11 +169,11 @@ const ActionsCreate = () => {
                 </button>
                 <div className="hidden md:block">
                     <div className="flex items-center text-sm text-noir-leger">
-                        <Link to="/actions" className="hover:text-jaune">
-                            <i className="fas fa-bolt mr-2"></i>Actions
+                        <Link to="/prestations" className="hover:text-jaune">
+                            <i className="fas fa-bolt mr-2"></i>Prestations
                         </Link>
                         <i className="fas fa-chevron-right mx-2"></i>
-                        <span className="text-noir">Nouvelle action</span>
+                        <span className="text-noir">Nouvelle prestation</span>
                     </div>
                 </div>
             </div>
@@ -127,9 +181,9 @@ const ActionsCreate = () => {
             {/* En-tête */}
             <div className="mb-3 md:mb-6">
                 <h1 className="text-xl md:text-3xl font-bold text-noir-fonce">
-                    <i className="fas fa-plus-circle text-jaune mr-1 md:mr-2"></i>Créer une Action
+                    <i className="fas fa-plus-circle text-jaune mr-1 md:mr-2"></i>Créer une Prestation
                 </h1>
-                <p className="text-noir-leger mt-1 md:mt-2 text-sm md:text-base">Appliquer une action sur un ou plusieurs adhérents</p>
+                <p className="text-noir-leger mt-1 md:mt-2 text-sm md:text-base">Appliquer une prestation sur un ou plusieurs adhérents</p>
             </div>
 
             {/* Formulaire */}
@@ -141,26 +195,26 @@ const ActionsCreate = () => {
                     </div>
                 )}
 
-                {/* Informations de l'action */}
+                {/* Informations de la prestation */}
                 <div className="mb-4 md:mb-8">
                     <h2 className="text-lg md:text-xl font-bold text-noir-fonce mb-3 md:mb-4 pb-2 border-b-2 border-jaune">
-                        <i className="fas fa-info-circle mr-1 md:mr-2"></i>Informations de l'Action
+                        <i className="fas fa-info-circle mr-1 md:mr-2"></i>Informations de la Prestation
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
                         <div className="md:col-span-2">
-                            <label htmlFor="type_action" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
-                                Type d'Action <span className="text-red-500">*</span>
+                            <label htmlFor="type_prestation" className="block text-xs md:text-sm font-medium text-noir mb-1 md:mb-2">
+                                Type de Prestation <span className="text-red-500">*</span>
                             </label>
                             <select
-                                name="type_action"
-                                id="type_action"
-                                value={formData.type_action}
+                                name="type_prestation"
+                                id="type_prestation"
+                                value={formData.type_prestation}
                                 onChange={handleChange}
                                 required
                                 className="w-full px-3 md:px-4 py-1.5 md:py-2 border border-gris rounded-md focus:ring-2 focus:ring-jaune focus:border-jaune text-sm md:text-base"
                             >
-                                <option value="">Sélectionner un type d'action...</option>
+                                <option value="">Sélectionner un type de prestation...</option>
                                 <option value="Bonus">Bonus</option>
                                 <option value="Prime">Prime</option>
                                 <option value="Aide exceptionnelle">Aide exceptionnelle</option>
@@ -170,7 +224,7 @@ const ActionsCreate = () => {
                                 <option value="Ajustement">Ajustement</option>
                                 <option value="Autre">Autre</option>
                             </select>
-                            {errors.type_action && <p className="text-red-500 text-xs mt-1">{errors.type_action[0]}</p>}
+                            {errors.type_prestation && <p className="text-red-500 text-xs mt-1">{errors.type_prestation[0]}</p>}
                         </div>
 
                         <div>
@@ -321,7 +375,7 @@ const ActionsCreate = () => {
                 {/* Boutons */}
                 <div className="flex flex-col sm:flex-row gap-2 md:gap-4 justify-end pt-4 md:pt-6 border-t border-gris">
                     <Link
-                        to="/actions"
+                        to="/prestations"
                         className="px-4 md:px-6 py-1.5 md:py-2 border border-gris text-noir-leger rounded-md hover:bg-gris-clair transition-colors text-center text-sm md:text-base"
                     >
                         <i className="fas fa-times mr-1 md:mr-2"></i>Annuler
@@ -337,7 +391,7 @@ const ActionsCreate = () => {
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-save mr-1 md:mr-2"></i>Créer l'Action
+                                <i className="fas fa-save mr-1 md:mr-2"></i>Créer la Prestation
                             </>
                         )}
                     </button>
@@ -347,4 +401,4 @@ const ActionsCreate = () => {
     );
 };
 
-export default ActionsCreate;
+export default PrestationsCreate;

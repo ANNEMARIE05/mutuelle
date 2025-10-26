@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+
+// Fake users data
+const FAKE_USERS = [
+    {
+        id: 1,
+        name: 'Admin',
+        email: 'admin@mutuelle.com',
+        password: 'password'
+    }
+];
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(false);
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [remember, setRemember] = useState(false);    
     const [showPassword, setShowPassword] = useState(false);
-    const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -18,37 +26,28 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await login(email, password, remember);
-            navigate('/dashboard');
-        } catch (err) {
-            // Gestion détaillée des erreurs
-            if (err.message === 'Network Error') {
-                setError('Erreur de connexion. Veuillez vérifier votre connexion internet.');
-            } else if (err.response) {
-                // Erreurs avec réponse du serveur
-                switch (err.response.status) {
-                    case 401:
-                        setError('Email ou mot de passe incorrect. Veuillez réessayer.');
-                        break;
-                    case 422:
-                        setError('Les données saisies sont invalides. Veuillez vérifier vos informations.');
-                        break;
-                    case 429:
-                        setError('Trop de tentatives de connexion. Veuillez réessayer dans quelques minutes.');
-                        break;
-                    case 500:
-                        setError('Erreur serveur. Veuillez réessayer plus tard.');
-                        break;
-                    default:
-                        setError(err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.');
+            // Simulation délai de chargement
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Vérifier les identifiants avec fake data
+            const user = FAKE_USERS.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Sauvegarder l'authentification dans localStorage
+                const token = 'fake_token_' + Date.now();
+                localStorage.setItem('auth_token', token);
+                localStorage.setItem('auth_user', JSON.stringify(user));
+                
+                if (remember) {
+                    localStorage.setItem('remember_me', 'true');
                 }
-            } else if (err.request) {
-                // Requête envoyée mais pas de réponse
-                setError('Aucune réponse du serveur. Veuillez vérifier votre connexion.');
+                
+                navigate('/dashboard');
             } else {
-                // Autre type d'erreur
-                setError('Une erreur inattendue est survenue. Veuillez réessayer.');
+                setError('Email ou mot de passe incorrect');
             }
+        } catch (error) {
+            setError('Une erreur est survenue lors de la connexion');
         } finally {
             setLoading(false);
         }
